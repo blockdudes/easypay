@@ -12,12 +12,12 @@ export const PublicAssetsReceivedCard = () => {
       <div className="relative">
         <div className="absolute top-0 right-0 -translate-y-[150px] -translate-x-[25px]">
           <motion.div
+            key="public-assets-received-image"
             transition={{
               duration: 0.8,
               ease: "easeInOut",
               delay: 0.2
             }}
-            key="public-assets-received-image"
             initial={{ opacity: 0, y: 50, rotate: -10 }}
             animate={{ 
               opacity: 1, 

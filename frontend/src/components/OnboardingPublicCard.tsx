@@ -30,29 +30,45 @@ export const OnboardingPublicCard = () => {
       onPointerLeaveCapture={undefined}
     >
       <div className="relative">
-        <motion.div className="absolute top-0 right-0 -translate-y-[180px] -translate-x-[10px]">
-          <motion.img
-            src="/public-model.png"
-            alt="public-model"
-            className="h-[470px] w-[300px]"
-            initial={{
-              y: 20,
-              opacity: 0,
+        <div className="absolute top-0 right-0 -translate-y-[180px] -translate-x-[10px]">
+          <motion.div
+            transition={{
+              duration: 0.8,
+              ease: "easeInOut",
+              delay: 0.2,
             }}
+            initial={{ opacity: 0, y: 50, rotate: -10 }}
             animate={{
-              y: 0,
               opacity: 1,
-              transition: { duration: 0.5, delay: 0.2 },
+              y: 0,
+              rotate: 0,
+              transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 10,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              y: -50,
+              rotate: 10,
+              transition: { duration: 0.5 },
             }}
             whileHover={{
               scale: 1.05,
               rotate: 5,
-              y: 0,
-              transition: { duration: 0.2 },
+              transition: { duration: 0.3 },
             }}
-            whileTap={{ scale: 0.95 }}
-          />
-        </motion.div>
+          >
+            <motion.img
+              src="/public-model.png"
+              alt="public-model"
+              className="h-[470px] w-[300px]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ rotate: 5 }}
+            />
+          </motion.div>
+        </div>
       </div>
       <div className="h-[700px] w-[275px] flex flex-col justify-end items-center pb-8">
         <motion.div
@@ -86,7 +102,10 @@ export const OnboardingPublicCard = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <div className="text-lg font-bold">Select Chain</div>
-            <motion.div className="w-full" animate={errors.chain ? shakeAnimation : {}}>
+            <motion.div
+              className="w-full"
+              animate={errors.chain ? shakeAnimation : {}}
+            >
               <Input
                 type="text"
                 value={chain}
@@ -111,7 +130,10 @@ export const OnboardingPublicCard = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <div className="text-lg font-bold">Select Token</div>
-            <motion.div className="w-full" animate={errors.token ? shakeAnimation : {}}>
+            <motion.div
+              className="w-full"
+              animate={errors.token ? shakeAnimation : {}}
+            >
               <Input
                 type="text"
                 value={token}
@@ -136,7 +158,10 @@ export const OnboardingPublicCard = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <div className="text-lg font-bold">Provide Account Address</div>
-            <motion.div className="w-full" animate={errors.address ? shakeAnimation : {}}>
+            <motion.div
+              className="w-full"
+              animate={errors.address ? shakeAnimation : {}}
+            >
               <Input
                 type="text"
                 value={address}

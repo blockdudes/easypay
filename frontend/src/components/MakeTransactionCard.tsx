@@ -67,7 +67,7 @@ export const MakeTransactionCard = () => {
                 transition: { duration: 0.5 },
               }}
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.95, rotate: 5 }}
             />
           </div>
         </div>

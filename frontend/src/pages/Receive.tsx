@@ -1,13 +1,12 @@
 import { MakeTransactionCard } from "../components/MakeTransactionCard";
-import { Button, Spinner } from "@material-tailwind/react";
-import { IoIosArrowRoundForward } from "react-icons/io";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { NextStepButton } from "../components/NextStepButton";
 
 const Receive = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleMakePayment = () => {
+  const handleMakeTransaction = () => {
     setIsLoading(true);
     // Simulating payment process
     setTimeout(() => setIsLoading(false), 2000);
@@ -23,32 +22,11 @@ const Receive = () => {
       >
         <MakeTransactionCard />
       </motion.div>
-      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-        <Button
-          className="w-72 rounded-full bg-gray-400 text-lg text-black font-thin normal-case py-2 hover:bg-gray-500 transition-colors duration-300"
-          size="lg"
-          onClick={handleMakePayment}
-          disabled={isLoading}
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
-        >
-          <div className="flex justify-center items-center gap-1 translate-x-[15px]">
-            {isLoading ? (
-              <Spinner
-                className="h-6 w-6"
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
-            ) : (
-              <>
-                Make Payment
-                <IoIosArrowRoundForward size={30} />
-              </>
-            )}
-          </div>
-        </Button>
-      </motion.div>
+      <NextStepButton
+        handleNextStep={handleMakeTransaction}
+        isLoading={isLoading}
+        label="Make Transaction"
+      />
     </div>
   );
 };

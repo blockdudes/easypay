@@ -4,11 +4,13 @@ import {
   Button,
   Step,
   Stepper,
+  Spinner,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSignature } from "react-icons/fa";
 import { GrTransaction } from "react-icons/gr";
 import { MdDone } from "react-icons/md";
+import { motion } from "framer-motion";
 
 export const OnboardingPrivateCard = ({
   isLastStep,
@@ -18,150 +20,178 @@ export const OnboardingPrivateCard = ({
   setIsLastStep: (value: boolean) => void;
 }) => {
   const [activeStep, setActiveStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
+  const handleNext = () => {
+    if (!isLastStep) {
+      setIsLoading(true);
+      setTimeout(() => {
+        setActiveStep((cur) => cur + 1);
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
+  const shakeAnimation = {
+    x: [0, -10, 10, -10, 10, 0],
+    transition: { duration: 0.4 },
+  };
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => setError(false), 500);
+    }
+  }, [error]);
 
   return (
-    <Card
-      className="w-[810px] h-[540px] shadow-2xl border-[1px] border-app-gray bg-private-gradient bg-cover p-8"
-      placeholder={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
-      <div className="relative">
-        <div className="absolute top-0 right-0 -translate-y-[180px]">
-          <img
-            src="/private-model.png"
-            alt="private-model"
-            className="h-[455px] w-[320px]"
-          />
-        </div>
-      </div>
-      <div className="h-[700px] w-[275px] flex flex-col justify-end items-center pb-8">
-        <Typography
-          variant="h1"
-          color="black"
-          className="text-6xl leading-[1.15]"
-          placeholder={undefined}
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
-        >
-          Private Profile...
-        </Typography>
-      </div>
       <Card
-        className="w-full h-full py-5 px-10 flex flex-col justify-around items-center"
+        className="w-[810px] h-[540px] shadow-2xl border-[1px] border-app-gray bg-private-gradient bg-cover p-8"
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
       >
-        <Stepper
-          className="w-[500px]"
-          activeStep={activeStep}
-          isLastStep={(value) => setIsLastStep(value)}
+        <div className="absolute top-0 right-0 -translate-y-[150px] z-0">
+          <motion.div
+            transition={{
+              duration: 0.8,
+              ease: "easeInOut",
+              delay: 0.2,
+            }}
+            initial={{ opacity: 0, y: 50, rotate: -10 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              rotate: 0,
+              transition: {
+                type: "spring",
+                stiffness: 100,
+                damping: 10,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              y: -50,
+              rotate: 10,
+              transition: { duration: 0.5 },
+            }}
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.3 },
+            }}
+          >
+            <motion.img
+              src="/private-model.png"
+              alt="private-model"
+              className="h-[455px] w-[320px]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            />
+          </motion.div>
+        </div>
+        <div className="h-[620px] w-[200px] flex flex-col justify-end items-start pb-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Typography
+              variant="h1"
+              color="black"
+              className="text-6xl leading-[1.15]"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              Private Profile...
+            </Typography>
+          </motion.div>
+        </div>
+        <Card
+          className="w-full h-full py-5 px-10 flex flex-col justify-between items-center"
           placeholder={undefined}
           onPointerEnterCapture={undefined}
           onPointerLeaveCapture={undefined}
         >
-          <Step
-            onClick={() => setActiveStep(0)}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            <FaSignature className="h-5 w-5" />
-            <div className="absolute -bottom-[3.5rem] w-max text-center">
-              <Typography
-                variant="h6"
-                color={activeStep === 0 ? "blue-gray" : "gray"}
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                Step 1
-              </Typography>
-              <Typography
-                color={activeStep === 0 ? "blue-gray" : "gray"}
-                className="font-normal"
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                Signature
-              </Typography>
-            </div>
-          </Step>
-          <Step
-            onClick={() => setActiveStep(1)}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            <GrTransaction className="h-5 w-5" />
-            <div className="absolute -bottom-[3.5rem] w-max text-center">
-              <Typography
-                variant="h6"
-                color={activeStep === 1 ? "blue-gray" : "gray"}
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                Step 2
-              </Typography>
-              <Typography
-                color={activeStep === 1 ? "blue-gray" : "gray"}
-                className="font-normal"
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                Transaction
-              </Typography>
-            </div>
-          </Step>
-          <Step
-            onClick={() => setActiveStep(2)}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            <MdDone className="h-5 w-5" />
-            <div className="absolute -bottom-[3.5rem] w-max text-center">
-              <Typography
-                variant="h6"
-                color={activeStep === 2 ? "blue-gray" : "gray"}
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                Step 3
-              </Typography>
-              <Typography
-                color={activeStep === 2 ? "blue-gray" : "gray"}
-                className="font-normal"
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              >
-                Completed
-              </Typography>
-            </div>
-          </Step>
-        </Stepper>
-        <div className="mt-20 flex justify-between">
-          <Button
-            className="w-48"
-            size="lg"
-            onClick={handleNext}
-            disabled={isLastStep}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-          >
-            Sign
-          </Button>
-        </div>
+          <motion.div animate={error ? shakeAnimation : {}}>
+            <Stepper
+              className="w-[500px]"
+              activeStep={activeStep}
+              isLastStep={(value) => setIsLastStep(value)}
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              {[
+                { icon: FaSignature, label: "Signature" },
+                { icon: GrTransaction, label: "Transaction" },
+                { icon: MdDone, label: "Completed" },
+              ].map((step, index) => (
+                <Step
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                >
+                  <step.icon className="h-5 w-5" />
+                  <div className="absolute -bottom-[3.5rem] w-max text-center">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                    >
+                      <Typography
+                        variant="h6"
+                        color={activeStep === index ? "blue-gray" : "gray"}
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        Step {index + 1}
+                      </Typography>
+                      <Typography
+                        color={activeStep === index ? "blue-gray" : "gray"}
+                        className="font-normal"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {step.label}
+                      </Typography>
+                    </motion.div>
+                  </div>
+                </Step>
+              ))}
+            </Stepper>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              className="w-48"
+              size="lg"
+              onClick={handleNext}
+              disabled={isLastStep}
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              {isLoading ? (
+                <div className="h-full w-full flex justify-center items-center">
+                  <Spinner
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  />
+                </div>
+              ) : (
+                "Sign"
+              )}
+            </Button>
+          </motion.div>
+        </Card>
       </Card>
-    </Card>
+    </motion.div>
   );
 };

@@ -12,8 +12,12 @@ export const PrivateAssetsReceivedCard = () => {
       <div className="relative">
         <div className="absolute top-0 right-0 -translate-y-[145px]">
           <motion.div
-            transition={{ duration: 0.25, delay: 0.25 }}
             key="public-assets-received-image"
+            transition={{
+              duration: 0.8,
+              ease: "easeInOut",
+              delay: 0.2,
+            }}
             initial={{ opacity: 0, y: 50, rotate: -10 }}
             animate={{
               opacity: 1,
@@ -33,14 +37,15 @@ export const PrivateAssetsReceivedCard = () => {
             }}
             whileHover={{
               scale: 1.05,
-              rotate: 5,
               transition: { duration: 0.3 },
             }}
           >
-            <img
+            <motion.img
               src="/private-model.png"
               alt="private-model"
               className="h-[315px] w-[240px]"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ rotate: 5 }}
             />
           </motion.div>
         </div>
