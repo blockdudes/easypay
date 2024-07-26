@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Receive from "./pages/Receive";
+import Public from "./pages/Public";
+import Private from "./pages/Private";
+import HomeLayout from "./layouts/HomeLayout";
+import OnboardingPublic from "./pages/OnboardingPublic";
+import OnboardingPrivate from "./pages/OnboardingPrivate";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="w-screen h-screen">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomeLayout />}>
+            <Route index element={<Navigate to="/public" replace />} />
+            <Route path="/public" element={<Public />} />
+            <Route path="/private" element={<Private />} />
+          </Route>
+          <Route path="/onboarding">
+            <Route path="/onboarding/public" element={<OnboardingPublic />} />
+            <Route path="/onboarding/private" element={<OnboardingPrivate />} />
+          </Route>
+          <Route path="/private/receive/:address" element={<Receive />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
-export default App
+export default App;
