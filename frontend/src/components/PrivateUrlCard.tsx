@@ -1,6 +1,7 @@
 import { Card, IconButton } from "@material-tailwind/react";
 import { useState } from "react";
 import { TbCopyCheck, TbCopy } from "react-icons/tb";
+import { motion } from "framer-motion";
 
 export const PrivateUrlCard = () => {
   const [copied, setCopied] = useState(false);
@@ -29,22 +30,37 @@ export const PrivateUrlCard = () => {
         <div className="text-2xl font-semibold">Private URL</div>
         <div className="w-5/6 flex items-center gap-1">
           <div className="text-xl text-black font-light truncate">{url}</div>
-          <IconButton
-            variant="text"
-            color="gray"
-            size="sm"
-            onClick={handleCopy}
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
+          <motion.div
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.1 }}
           >
-            {copied ? <TbCopyCheck size={20} /> : <TbCopy size={20} />}
-          </IconButton>
+            <IconButton
+              variant="text"
+              color="gray"
+              size="sm"
+              onClick={handleCopy}
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              {copied ? <TbCopyCheck size={20} /> : <TbCopy size={20} />}
+            </IconButton>
+          </motion.div>
         </div>
       </div>
       <div className="flex gap-1">
-        <div className="h-5 w-4/6 bg-app-light-blue rounded-md" />
-        <div className="h-5 w-2/6 bg-app-blue rounded-md" />
+        <motion.div
+          className="h-5 w-4/6 bg-app-light-blue rounded-md"
+          initial={{ width: 0 }}
+          animate={{ width: "66.67%" }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+        />
+        <motion.div
+          className="h-5 w-2/6 bg-app-blue rounded-md"
+          initial={{ width: 0 }}
+          animate={{ width: "33.33%" }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+        />
       </div>
     </Card>
   );

@@ -1,6 +1,7 @@
 import { Card, IconButton } from "@material-tailwind/react";
 import { useState } from "react";
 import { TbCopy, TbCopyCheck } from "react-icons/tb";
+import { motion } from "framer-motion";
 
 export const PublicAddressCard = () => {
   const [copied, setCopied] = useState(false);
@@ -39,8 +40,18 @@ export const PublicAddressCard = () => {
         </div>
       </div>
       <div className="flex gap-1">
-        <div className="h-5 w-2/6 bg-app-yellow rounded-md" />
-        <div className="h-5 w-4/6 bg-app-red rounded-md" />
+        <motion.div
+          className="h-5 bg-app-yellow rounded-md"
+          initial={{ width: 0 }}
+          animate={{ width: "33.33%" }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+        />
+        <motion.div
+          className="h-5 bg-app-red rounded-md"
+          initial={{ width: 0 }}
+          animate={{ width: "66.67%" }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+        />
       </div>
     </Card>
   );
