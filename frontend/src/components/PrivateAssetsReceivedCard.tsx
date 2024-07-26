@@ -1,4 +1,6 @@
 import { Card, Typography } from "@material-tailwind/react";
+import { motion } from "framer-motion";
+import { assetsRecievedImageTransitions } from "../transitions/transitions";
 
 export const PrivateAssetsReceivedCard = () => {
   return (
@@ -10,11 +12,20 @@ export const PrivateAssetsReceivedCard = () => {
     >
       <div className="relative">
         <div className="absolute top-0 right-0 -translate-y-[145px]">
-          <img
-            src="/private-model.png"
-            alt="private-model"
-            className="h-[315px] w-[240px]"
-          />
+          <motion.div
+            transition={{ duration: 0.5 }}
+            key="public-assets-received-image"
+            initial="initial"
+            animate="in"
+            exit="out"
+            variants={assetsRecievedImageTransitions}
+          >
+            <img
+              src="/private-model.png"
+              alt="private-model"
+              className="h-[315px] w-[240px]"
+            />
+          </motion.div>
         </div>
       </div>
       <div className="h-[360px] w-[275px] flex flex-col justify-center items-center">

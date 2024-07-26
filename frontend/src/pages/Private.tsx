@@ -3,8 +3,12 @@ import { PrivateUrlCard } from "../components/PrivateUrlCard";
 import { TransactionDataTable } from "../components/TransactionDataTable";
 import { Transaction } from "../types/types";
 import { PrivateAssetsReceivedCard } from "../components/PrivateAssetsReceivedCard";
+import { Header } from "../components/Header";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { homePageTransitions } from "../transitions/transitions";
 
-const Public = () => {
+const Private = () => {
   const headers = [
     "S. No.",
     "Sender",
@@ -287,29 +291,43 @@ const Public = () => {
       type: "public",
     },
   ];
+  const [direction, setDirection] = useState<string>("right");
 
   const handleWithdraw = (transaction: Transaction) => {
     console.log("Withdraw", transaction);
   };
 
   return (
-    <div className="h-full w-full flex flex-col justify-start items-start py-6 px-24">
-      <div className="h-full w-full grid grid-cols-2 grid-rows-2 gap-4">
-        <PrivateAssetsReceivedCard />
-        <div className="grid grid-cols-1 grid-rows-2 gap-4">
-          <PublicAddressCard />
-          <PrivateUrlCard />
-        </div>
-        <div className="col-span-2">
-          <TransactionDataTable
-            headers={headers}
-            transactions={transactions}
-            onWithdraw={handleWithdraw}
-          />
+    <motion.div
+      transition={{ duration: 0.5 }}
+      key="private"
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={homePageTransitions}
+      custom={direction}
+    >
+      <Header isPublic={false} setDirection={setDirection} />
+      <div className="h-[calc(100vh-96px)] w-full">
+        <div className="h-full w-full flex flex-col justify-start items-start py-6 px-24">
+          <div className="h-full w-full grid grid-cols-2 grid-rows-2 gap-4">
+            <PrivateAssetsReceivedCard />
+            <div className="grid grid-cols-1 grid-rows-2 gap-4">
+              <PublicAddressCard />
+              <PrivateUrlCard />
+            </div>
+            <div className="col-span-2">
+              <TransactionDataTable
+                headers={headers}
+                transactions={transactions}
+                onWithdraw={handleWithdraw}
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default Public;
+export default Private;
