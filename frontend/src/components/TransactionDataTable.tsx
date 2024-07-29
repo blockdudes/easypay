@@ -1,7 +1,7 @@
 import { Typography, Button, Card } from "@material-tailwind/react";
-import { Transaction } from "../types/types";
 import WithdrawDialog from "./WithdrawDialog";
 import { useState } from "react";
+import { transactionHistoryType } from "../types/types";
 
 export const TransactionDataTable = ({
   headers,
@@ -9,14 +9,14 @@ export const TransactionDataTable = ({
   onWithdraw,
 }: {
   headers: string[];
-  transactions: Transaction[];
-  onWithdraw?: (transaction: Transaction) => void | undefined;
+  transactions: transactionHistoryType[];
+  onWithdraw?: (transaction: transactionHistoryType) => void | undefined;
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+    useState<transactionHistoryType | null>(null);
 
-  const handleOpenDialog = (transaction: Transaction) => {
+  const handleOpenDialog = (transaction: transactionHistoryType) => {
     setSelectedTransaction(transaction);
     setOpenDialog(true);
   };
@@ -25,6 +25,7 @@ export const TransactionDataTable = ({
     setOpenDialog(false);
     setSelectedTransaction(null);
   };
+
   return (
     <>
       {openDialog && selectedTransaction && (
@@ -49,9 +50,8 @@ export const TransactionDataTable = ({
                   className="p-4 text-center border-b-[1px] border-app-gray"
                 >
                   <div
-                    className={`text-2xl text-bold ${
-                      onWithdraw ? "text-app-brown" : "text-app-blue"
-                    } leading-none opacity-70`}
+                    className={`text-2xl text-bold ${onWithdraw ? "text-app-brown" : "text-app-blue"
+                      } leading-none opacity-70`}
                   >
                     {head}
                   </div>
@@ -63,7 +63,7 @@ export const TransactionDataTable = ({
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction: Transaction, index: number) => {
+            {transactions.map((transaction: transactionHistoryType, index: number) => {
               return (
                 <tr key={index} className="h-20">
                   <td className="p-4 text-center">{index + 1}</td>
@@ -143,18 +143,31 @@ export const TransactionDataTable = ({
                   </td>
                   {onWithdraw && (
                     <td className="p-4 text-center">
-                      <Button
-                        variant="gradient"
-                        size="sm"
-                        color="brown"
-                        className="w-full text-sm py-2 mx-0 font-medium normal-case"
-                        onClick={() => handleOpenDialog(transaction)}
-                        placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                      >
-                        Withdraw
-                      </Button>
+                      {
+                        transaction.iswithdrawn ? (
+                          <Typography
+                            variant="small"
+                            color="green"
+                            className="font-normal"
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                          >Withdrawn</Typography>
+                        ) : (
+                          <Button
+                            variant="gradient"
+                            size="sm"
+                            color="brown"
+                            className="w-full text-sm py-2 mx-0 font-medium normal-case"
+                            onClick={() => handleOpenDialog(transaction)}
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                          >
+                            Withdraw
+                          </Button>
+                        )
+                      }
                     </td>
                   )}
                 </tr>

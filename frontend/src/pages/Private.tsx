@@ -3,6 +3,11 @@ import { PrivateUrlCard } from "../components/PrivateUrlCard";
 import { TransactionDataTable } from "../components/TransactionDataTable";
 import { Transaction } from "../types/types";
 import { PrivateAssetsReceivedCard } from "../components/PrivateAssetsReceivedCard";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
+import { ethers } from "ethers";
+import { transactionHistoryType } from "../types/types";
+import { useState, useEffect } from "react";
 
 const Public = () => {
   const headers = [
@@ -15,278 +20,53 @@ const Public = () => {
     "Txn Hash",
     "",
   ];
-  const transactions: Transaction[] = [
-    {
-      sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
-      chain: "Ethereum",
-      date: "2021-01-01",
-      asset: "ETH",
-      amount: "0.001",
-      txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
-      type: "private",
-    },
-    {
-      sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
-      chain: "Arbitrum",
-      date: "2024-02-15",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
-      type: "public",
-    },
-    {
-      sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
-      chain: "Polygon",
-      date: "2024-02-05",
-      asset: "MATIC",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
-      chain: "Ethereum",
-      date: "2021-01-01",
-      asset: "ETH",
-      amount: "0.001",
-      txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
-      type: "private",
-    },
-    {
-      sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
-      chain: "Arbitrum",
-      date: "2024-02-15",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
-      type: "public",
-    },
-    {
-      sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
-      chain: "Polygon",
-      date: "2024-02-05",
-      asset: "MATIC",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
-      chain: "Ethereum",
-      date: "2021-01-01",
-      asset: "ETH",
-      amount: "0.001",
-      txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
-      type: "private",
-    },
-    {
-      sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
-      chain: "Arbitrum",
-      date: "2024-02-15",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
-      type: "public",
-    },
-    {
-      sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
-      chain: "Polygon",
-      date: "2024-02-05",
-      asset: "MATIC",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
-      chain: "Ethereum",
-      date: "2021-01-01",
-      asset: "ETH",
-      amount: "0.001",
-      txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
-      type: "private",
-    },
-    {
-      sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
-      chain: "Arbitrum",
-      date: "2024-02-15",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
-      type: "public",
-    },
-    {
-      sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
-      chain: "Polygon",
-      date: "2024-02-05",
-      asset: "MATIC",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
-      chain: "Ethereum",
-      date: "2021-01-01",
-      asset: "ETH",
-      amount: "0.001",
-      txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
-      type: "private",
-    },
-    {
-      sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
-      chain: "Arbitrum",
-      date: "2024-02-15",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
-      type: "public",
-    },
-    {
-      sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
-      chain: "Polygon",
-      date: "2024-02-05",
-      asset: "MATIC",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "private",
-    },
-    {
-      sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
-      chain: "Ethereum",
-      date: "2024-02-05",
-      asset: "ETH",
-      amount: "0.0234",
-      txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
-      type: "public",
-    },
-  ];
+  const { provider, signer, umbra, stealthKeyRegistry } = useAppSelector((state: RootState) => state.connectWallet);
+  
+  const scan = async () => {
+    try {
+      if (provider && signer && umbra && stealthKeyRegistry) {
+        const { spendingKeyPair, viewingKeyPair } = await umbra.generatePrivateKeys(signer);
+        const spendingPublicKey = spendingKeyPair.publicKeyHex;
+        const viewingPrivateKey = viewingKeyPair.privateKeyHex;
+
+        if (viewingPrivateKey) {
+          const { userAnnouncements } = await umbra.scan(
+            spendingPublicKey,
+            viewingPrivateKey
+          );
+          console.log("userAnnouncements: ", userAnnouncements);
+
+          let existingObjects: transactionHistoryType[] = JSON.parse(localStorage.getItem("scanPrivateData") || "[]");
+          for (const tx of userAnnouncements) {
+            const date = new Date(Number(tx.timestamp) * 1000).toLocaleDateString('en-GB');
+            const check = existingObjects.find(obj => obj.txnhash === tx.txHash);
+            if (!check) {
+              existingObjects.unshift({
+                sender: tx.from,
+                chain: (await provider.getNetwork()).name,
+                date: date,
+                asset: tx.token === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" ? "ETH" : "TOKEN",
+                amount: ethers.utils.formatUnits(tx.amount.toBigInt(), 18),
+                txnhash: tx.txHash,
+                iswithdrawn: tx.isWithdrawn,
+                randomnumber: tx.randomNumber,
+                receiver: tx.receiver,
+                token: tx.token,
+                type: "private"
+              })
+            }
+          }
+          localStorage.setItem("scanPrivateData", JSON.stringify(existingObjects));
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // useEffect(() => {
+  //   scan();
+  // }, [provider, signer, umbra, stealthKeyRegistry]);
 
   const handleWithdraw = (transaction: Transaction) => {
     console.log("Withdraw", transaction);
@@ -301,9 +81,12 @@ const Public = () => {
           <PrivateUrlCard />
         </div>
         <div className="col-span-2">
+          <div className="flex justify-end">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={scan}>Scan</button>
+          </div>
           <TransactionDataTable
             headers={headers}
-            transactions={transactions}
+            transactions={JSON.parse(localStorage.getItem("scanPrivateData") || "[]")}
             onWithdraw={handleWithdraw}
           />
         </div>

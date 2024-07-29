@@ -1,9 +1,13 @@
 import { Card, IconButton } from "@material-tailwind/react";
 import { useState } from "react";
 import { TbCopy, TbCopyCheck } from "react-icons/tb";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
 
 export const PublicAddressCard = () => {
   const [copied, setCopied] = useState(false);
+  const { address } = useAppSelector((state: RootState) => state.connectWallet);
+  
 
   const handleCopy = () => {
     setCopied(true);
@@ -23,7 +27,7 @@ export const PublicAddressCard = () => {
         <div className="text-2xl font-semibold">Public Address</div>
         <div className="w-5/6 flex items-center gap-1">
           <div className="text-xl text-black font-light truncate">
-            0x23nsja321msdann312jmsanda
+            {address}
           </div>
           <IconButton
             variant="text"

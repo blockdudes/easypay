@@ -10,6 +10,10 @@ import {
 import { useState } from "react";
 import { Transaction } from "../types/types";
 
+import { transactionHistoryType } from "../types/types";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
+
 const WithdrawDialog = ({
   open,
   handleClose,
@@ -17,14 +21,55 @@ const WithdrawDialog = ({
 }: {
   open: boolean;
   handleClose: () => void;
-  transaction: Transaction;
+  transaction: transactionHistoryType;
 }) => {
   const [address, setAddress] = useState("");
 
-  const handleWithdraw = () => {
-    console.log("Withdraw", transaction, "to:", address);
-    handleClose();
-  };
+  const { provider, signer, umbra, stealthKeyRegistry } = useAppSelector((state: RootState) => state.connectWallet);
+
+  // const handleWithdraw = () => {
+  //   // console.log("Withdraw", transaction, "to:", address);
+  //   handleClose();
+  // };
+
+
+  const handleWithdraw = async () => {
+    try {
+      const tx: transactionHistoryType = transaction;
+      console.log(tx.randomnumber);
+
+      if (provider && signer && umbra && stealthKeyRegistry) {
+        if (tx.type === "private") {
+          const { spendingKeyPair } = await umbra.generatePrivateKeys(signer);
+          const stealthKeyPair = await spendingKeyPair.mulPrivateKey(tx.randomnumber);
+          const stealthPrivateKey = stealthKeyPair.privateKeyHex;
+          if (stealthPrivateKey) {
+            console.log(stealthKeyPair.address);
+            if (tx.token === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
+              await umbra.withdraw(stealthPrivateKey, tx.token, address);
+              
+              let existingObjects: transactionHistoryType[] = JSON.parse(localStorage.getItem("scanPrivateData") || "[]");
+              const findTx = existingObjects.find(obj => obj.randomnumber === tx.randomnumber);
+              if (findTx) {
+                findTx.iswithdrawn = true;
+              }
+              localStorage.setItem("scanPrivateData", JSON.stringify(existingObjects));
+            } else {
+              console.log("withdraw for token not supported");
+            }
+          } else {
+            console.log("stealth private key not found");
+          }
+        } else {
+          console.log("public")
+        }
+      } else {
+        console.log("connect your wallet");
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Dialog

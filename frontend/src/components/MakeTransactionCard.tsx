@@ -1,9 +1,8 @@
 import { Card, Input } from "@material-tailwind/react";
 import { useState } from "react";
 
-export const MakeTransactionCard = () => {
-  const [token, setToken] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+export const MakeTransactionCard = ({ amount, token, setAmount, setToken }: { amount: string, token: string, setAmount: (e: string) => void, setToken: (e: string) => void }) => {
+  
   return (
     <Card
       className="h-[495px] w-[810px] shadow-2xl border-[1px] border-app-gray bg-private-gradient bg-cover p-8"
