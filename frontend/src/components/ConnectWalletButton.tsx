@@ -1,8 +1,8 @@
 import { useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
-import { createWallet, walletConnect, inAppWallet } from "thirdweb/wallets";
-
+import { createWallet, walletConnect } from "thirdweb/wallets";
 import { ConnectButton } from "thirdweb/react";
+import { arbitrumSepolia, sepolia } from "thirdweb/chains";
 
 export const ConnectWalletButton = () => {
   const { client } = useAppSelector((state: RootState) => state.thirdWeb);
@@ -10,11 +10,6 @@ export const ConnectWalletButton = () => {
     createWallet("io.metamask"),
     createWallet("com.coinbase.wallet"),
     walletConnect(),
-    inAppWallet({
-      auth: {
-        options: ["facebook", "google"],
-      },
-    }),
   ];
 
   return (
@@ -30,6 +25,7 @@ export const ConnectWalletButton = () => {
 
     <ConnectButton
       client={client}
+      chains={[arbitrumSepolia, sepolia]}
       wallets={wallets}
       theme={"light"}
       connectModal={{ size: "wide" }}

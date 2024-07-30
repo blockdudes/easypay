@@ -1,4 +1,4 @@
-import { Typography, Button, Card } from "@material-tailwind/react";
+import { Typography, Button, Card, Spinner } from "@material-tailwind/react";
 import WithdrawDialog from "./WithdrawDialog";
 import { useState } from "react";
 import { transactionHistoryType } from "../types/types";
@@ -8,10 +8,12 @@ export const TransactionDataTable = ({
   headers,
   transactions,
   onWithdraw,
+  isLoading,
 }: {
   headers: string[];
   transactions: transactionHistoryType[];
   onWithdraw?: (transaction: transactionHistoryType) => void | undefined;
+  isLoading: boolean;
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
@@ -69,9 +71,30 @@ export const TransactionDataTable = ({
               )}
             </tr>
           </thead>
-          <tbody>
-            {transactions.map(
-              (transaction: transactionHistoryType, index: number) => {
+          <tbody className="relative">
+            {isLoading ? (
+              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
+                <Spinner
+                  className="w-10 h-10 animate-spin"
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                />
+              </div>
+            ) : transactions.length == 0 ? (
+              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
+                <Typography
+                  variant="lead"
+                  color="gray"
+                  className="font-normal"
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                >
+                  No transactions found
+                </Typography>
+              </div>
+            ) : (
+              transactions.map((transaction, index) => {
                 return (
                   <tr key={index} className="h-20">
                     <td className="p-4 text-center">{index + 1}</td>
@@ -181,7 +204,7 @@ export const TransactionDataTable = ({
                     )}
                   </tr>
                 );
-              }
+              })
             )}
           </tbody>
         </table>

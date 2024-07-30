@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Header } from "../components/Header";
 import { motion } from "framer-motion";
 import { homePageTransitions } from "../transitions/transitions";
+import { Button } from "@material-tailwind/react";
 
 const Private = () => {
   const headers = [
@@ -27,8 +28,10 @@ const Private = () => {
     (state: RootState) => state.connectWallet
   );
   const [direction, setDirection] = useState<string>("right");
+  const [isLoading, setIsLoading] = useState(false);
 
   const scan = async () => {
+    setIsLoading(true);
     try {
       if (provider && signer && umbra && stealthKeyRegistry) {
         const { spendingKeyPair, viewingKeyPair } =
@@ -81,6 +84,7 @@ const Private = () => {
     } catch (error) {
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   // useEffect(() => {
@@ -110,14 +114,18 @@ const Private = () => {
               <PublicAddressCard />
               <PrivateUrlCard />
             </div>
-            <div className="col-span-2">
-              <div className="flex justify-end">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            <div className="col-span-2 relative">
+              <div className="absolute top-6 right-6 z-10">
+                <Button
+                  variant="outlined"
+                  color="brown"
                   onClick={scan}
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
                 >
                   Scan
-                </button>
+                </Button>
               </div>
               <TransactionDataTable
                 headers={headers}
@@ -125,7 +133,7 @@ const Private = () => {
                   localStorage.getItem("scanPrivateData") || "[]"
                 )}
                 onWithdraw={handleWithdraw}
-                
+                isLoading={isLoading}
               />
             </div>
           </div>

@@ -5,7 +5,7 @@ import { TransactionDataTable } from "../components/TransactionDataTable";
 import { transactionHistoryType } from "../types/types";
 import { Header } from "../components/Header";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { homePageTransitions } from "../transitions/transitions";
 
 // import { PageTransition } from "../components/PageTransition";
@@ -20,7 +20,7 @@ const Public = () => {
     "Amount",
     "Txn Hash",
   ];
-  const transactions: transactionHistoryType[] = [
+  const dummyTransactions: transactionHistoryType[] = [
     {
       sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
       chain: "Ethereum",
@@ -413,6 +413,18 @@ const Public = () => {
     },
   ];
   const [direction, setDirection] = useState<"left" | "right">("left");
+  const [isLoading, setIsLoading] = useState(false);
+  const [transactions, setTransactions] = useState<transactionHistoryType[]>(
+    []
+  );
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setTransactions(dummyTransactions);
+      setIsLoading(false);
+    }, 2000);
+  }, []);
 
   return (
     <motion.div
@@ -437,6 +449,7 @@ const Public = () => {
               <TransactionDataTable
                 headers={headers}
                 transactions={transactions}
+                isLoading={isLoading}
               />
             </div>
           </div>

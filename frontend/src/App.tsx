@@ -11,17 +11,9 @@ import Public from "./pages/Public";
 import Private from "./pages/Private";
 import OnboardingPublic from "./pages/OnboardingPublic";
 import OnboardingPrivate from "./pages/OnboardingPrivate";
-import { useSelector } from "react-redux";
-import { RootState } from "./app/store";
-import { ethers } from "ethers";
-// import { sepolia } from "wagmi/chains"
-// import { numberToHex } from "viem";
-// import { Umbra, StealthKeyRegistry } from "@umbracash/umbra-js"
-// import { useActiveAccount } from "thirdweb/react";
-// import {useConnectionStatus} from "@thirdweb-dev/react";
 import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { useAppDispatch } from "./app/hooks";
 
 import { connectWallet } from "./app/features/connectWalletSlice";
 
@@ -46,30 +38,17 @@ function AnimatedRoutes() {
 
 function App() {
   const dispatch = useAppDispatch();
-  const thirdweb = useAppSelector((state: RootState) => state.thirdWeb);
-  const wallet = useAppSelector((state: RootState) => state.connectWallet);
-
-
-  // const provider = new ethers.providers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
-
-  // console.log(process.env.SEPOLIA_RPC_URL);
-  // console.log(provider);
-
   const connectionStatus = useActiveWalletConnectionStatus();
 
   useEffect(() => {
     console.log(connectionStatus);
-
-    if(connectionStatus === "connected") {
+    if (connectionStatus === "connected") {
       console.log("connected");
       dispatch(connectWallet());
     } else {
       console.log("not connected");
     }
   }, [connectionStatus]);
-
-
-
 
   return (
     <div className="w-screen h-screen">

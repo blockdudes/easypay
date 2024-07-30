@@ -5,13 +5,13 @@ import { useActiveAccount } from "thirdweb/react";
 import { motion } from "framer-motion";
 
 export const PrivateUrlCard = () => {
-  const acount = useActiveAccount();
+  const account = useActiveAccount();
   const [copied, setCopied] = useState(false);
 
   const url =
     location.href.split("/").slice(0, -1).join("/") +
     "/private/receive/" +
-    acount?.address;
+    account?.address;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(url);

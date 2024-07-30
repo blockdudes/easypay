@@ -12,6 +12,10 @@ import { GrTransaction } from "react-icons/gr";
 import { MdDone } from "react-icons/md";
 import { motion } from "framer-motion";
 
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
+import { ConnectWalletButton } from "./ConnectWalletButton";
+
 export const OnboardingPrivateCard = ({
   isLastStep,
   setIsLastStep,
@@ -23,13 +27,62 @@ export const OnboardingPrivateCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
+  const [spendingKey, setSpendingKey] = useState<string | null>(null);
+  const [viewingKey, setViewingKey] = useState<string | null>(null);
+
+  const { provider, signer, umbra, stealthKeyRegistry } = useAppSelector(
+    (state: RootState) => state.connectWallet
+  );
+
+  const sign = async () => {
+    try {
+      if (provider && signer && umbra && stealthKeyRegistry) {
+        const { spendingKeyPair, viewingKeyPair } =
+          await umbra.generatePrivateKeys(signer);
+        setSpendingKey(spendingKeyPair.publicKeyHex);
+        setViewingKey(viewingKeyPair.publicKeyHex);
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  const sendTransaction = async () => {
+    if (
+      provider &&
+      signer &&
+      umbra &&
+      stealthKeyRegistry &&
+      spendingKey &&
+      viewingKey
+    ) {
+      try {
+        const signed = await stealthKeyRegistry.setStealthKeys(
+          spendingKey,
+          viewingKey,
+          signer
+        );
+        console.log(signed);
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+  };
+
   const handleNext = () => {
     if (!isLastStep) {
       setIsLoading(true);
-      setTimeout(() => {
-        setActiveStep((cur) => cur + 1);
-        setIsLoading(false);
-      }, 1000);
+      (activeStep === 0 ? sign : sendTransaction)()
+        .then(() => {
+          setActiveStep((cur) => cur + 1);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          setError(true);
+          setIsLoading(false);
+        });
     }
   };
 
@@ -56,6 +109,9 @@ export const OnboardingPrivateCard = ({
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
       >
+        <div className="hidden">
+          <ConnectWalletButton />
+        </div>
         <div className="absolute top-0 right-0 -translate-y-[150px] z-0">
           <motion.div
             transition={{
@@ -133,6 +189,7 @@ export const OnboardingPrivateCard = ({
                 { icon: MdDone, label: "Completed" },
               ].map((step, index) => (
                 <Step
+                  key={index}
                   placeholder={undefined}
                   onPointerEnterCapture={undefined}
                   onPointerLeaveCapture={undefined}

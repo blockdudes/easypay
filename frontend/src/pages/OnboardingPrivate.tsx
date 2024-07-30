@@ -10,7 +10,6 @@ const OnboardingPrivate = () => {
 
   const handleNextStep = () => {
     setIsLoading(true);
-
     // Simulating payment process
     setTimeout(() => {
       setIsLoading(false);
@@ -25,7 +24,11 @@ const OnboardingPrivate = () => {
         isLastStep={isLastStep}
         setIsLastStep={setIsLastStep}
       />
-      <NextStepButton handleNextStep={handleNextStep} isLoading={isLoading} />
+      <NextStepButton
+        handleNextStep={handleNextStep}
+        isLoading={isLoading}
+        disabled={!isLastStep}
+      />
     </div>
   );
 };

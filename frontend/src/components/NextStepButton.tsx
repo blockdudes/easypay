@@ -4,10 +4,12 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 
 export const NextStepButton = ({
   label = "Next Step",
+  disabled = false,
   handleNextStep,
   isLoading,
 }: {
   label?: string;
+  disabled?: boolean;
   handleNextStep: () => void;
   isLoading: boolean;
 }) => {
@@ -17,7 +19,7 @@ export const NextStepButton = ({
         className="w-72 rounded-full bg-gray-400 text-lg text-black font-thin normal-case py-2"
         size="lg"
         onClick={handleNextStep}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         placeholder={undefined}
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
