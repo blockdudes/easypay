@@ -80,6 +80,8 @@ const Private = () => {
             JSON.stringify(existingObjects)
           );
         }
+      } else {
+        console.log("connect wallet");
       }
     } catch (error) {
       console.log(error);

@@ -9,14 +9,29 @@ contract AssetReceiver {
     address payable public creator;
     address public token;
     uint256 public chainId;
+    bool public initialized;
 
-    constructor(address _creator, address _token, uint256 _chainId)  {
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
+        _;
+    }
+
+    constructor(address _creator)  {
         owner = payable(msg.sender);
         creator = payable(_creator);
-        token = _token;
-        chainId = _chainId;
+        // token = _token;
+        // chainId = _chainId;
     }
     fallback() external payable {}
+
+    function initialize(address _token, uint256 _chainId) public onlyOwner {
+        require(!initialized, "Already initialized");
+        token = _token;
+        chainId = _chainId;
+        initialized = true;
+    }
+
+
 
     function execute(address[] memory contracts, bytes[] calldata data, uint256[] memory values)  external {
         for(uint i = 0; i < contracts.length; i++) {
