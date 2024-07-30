@@ -29,6 +29,7 @@ const Private = () => {
   const [direction, setDirection] = useState<string>("right");
 
   const scan = async () => {
+    console.log("Hello")
     try {
       if (provider && signer && umbra && stealthKeyRegistry) {
         const { spendingKeyPair, viewingKeyPair } =
@@ -77,6 +78,8 @@ const Private = () => {
             JSON.stringify(existingObjects)
           );
         }
+      } else {
+        console.log("connect wallet");
       }
     } catch (error) {
       console.log(error);
@@ -125,7 +128,7 @@ const Private = () => {
                   localStorage.getItem("scanPrivateData") || "[]"
                 )}
                 onWithdraw={handleWithdraw}
-                
+
               />
             </div>
           </div>

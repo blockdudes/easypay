@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import Hero from "./pages/Hero";
 import Receive from "./pages/Receive";
 import Public from "./pages/Public";
 import Private from "./pages/Private";
@@ -31,7 +32,7 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait" initial={true}>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/public" replace />} />
+        <Route path="/" element={<Hero />} />
         <Route path="/public" element={<Public />} />
         <Route path="/private" element={<Private />} />
         <Route path="/onboarding">
@@ -46,30 +47,16 @@ function AnimatedRoutes() {
 
 function App() {
   const dispatch = useAppDispatch();
-  const thirdweb = useAppSelector((state: RootState) => state.thirdWeb);
-  const wallet = useAppSelector((state: RootState) => state.connectWallet);
-
-
-  // const provider = new ethers.providers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
-
-  // console.log(process.env.SEPOLIA_RPC_URL);
-  // console.log(provider);
-
   const connectionStatus = useActiveWalletConnectionStatus();
 
   useEffect(() => {
-    console.log(connectionStatus);
-
-    if(connectionStatus === "connected") {
+    if (connectionStatus === "connected") {
       console.log("connected");
       dispatch(connectWallet());
     } else {
       console.log("not connected");
     }
   }, [connectionStatus]);
-
-
-
 
   return (
     <div className="w-screen h-screen">
@@ -81,3 +68,7 @@ function App() {
 }
 
 export default App;
+
+
+// factory arbitrum sepolia: 0x3558C2D26A26D1aeAbA39503017137D8DEBb9337
+// factory sepolia: 0x9769c95e46681a9BF9A6Bfa303bef1B04C636e1D

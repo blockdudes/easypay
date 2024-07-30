@@ -16,8 +16,13 @@ import {
 import { convertChainNameToNumber } from "./utils/helpers";
 import "dotenv/config";
 import { assetReceiverFactoryInterface } from "./utils/interface";
+import cors from "cors";
+
+
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 
 // const mongoString =
 //   `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -44,6 +49,23 @@ app.get("/", (req, res) => {
   // createAssetReceiverDeployWebHook(assetFactoryAddress)
   // createAddressActivityWebHook(assetFactoryAddress)
   res.send("Hello World!");
+});
+
+app.get("/get-asset-receiver", async (req, res) => {
+  try {
+    const owner = req.query.owner;
+    if (!owner) {
+      return res.status(400).send("Owner is required");
+    }
+    const assetReceivers = await AssetReceiver.findOne({ owner });
+    if (!assetReceivers) {
+      return res.status(404).send("No asset found for the owner");
+    }
+    res.status(200).send(assetReceivers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 
@@ -161,22 +183,25 @@ const saveAssetReceiverInDb = async (
 };
 
 app.get("/get-asset-receiver",
-  async (req, res) => {
-    const owner = req.query.owner;
-    if (!owner) {
-      return res.status(400).send("Owner is required");
-    }
-    try {
-      const assetReceivers = await AssetReceiver.find({ owner });
-      if (!assetReceivers) {
-        return res.status(404).send("No asset found for the owner");
-      }
-      console.log(assetReceivers);
-      res.status(200).send(assetReceivers);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    }
+  (req, res) => {
+    // const owner = req.query.owner;
+
+    // if (!owner) {
+    //   return res.status(400).send("Owner is required");
+    // }
+    // try {
+    //   const assetReceivers = await AssetReceiver.find({ owner });
+    //   if (!assetReceivers) {
+    //     return res.status(404).send("No asset found for the owner");
+    //   }
+    //   console.log(assetReceivers);
+    //   res.status(200).send(assetReceivers);
+    // } catch (error) {
+    //   console.error(error);
+    //   res.status(500).send("Internal Server Error");
+    // }
+
+    return res.status(200).send("Hello");
   }
 );
 
