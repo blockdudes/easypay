@@ -2,7 +2,7 @@ import { PublicAssetsReceivedCard } from "../components/PublicAssetsReceivedCard
 import { PublicAddressCard } from "../components/PublicAddressCard";
 import { PrivateUrlCard } from "../components/PrivateUrlCard";
 import { TransactionDataTable } from "../components/TransactionDataTable";
-import { Transaction } from "../types/types";
+import { transactionHistoryType } from "../types/types";
 import { Header } from "../components/Header";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -20,7 +20,7 @@ const Public = () => {
     "Amount",
     "Txn Hash",
   ];
-  const transactions: Transaction[] = [
+  const transactions: transactionHistoryType[] = [
     {
       sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
       chain: "Ethereum",
@@ -29,6 +29,10 @@ const Public = () => {
       amount: "0.001",
       txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
@@ -38,6 +42,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
@@ -47,6 +55,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -56,6 +68,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -65,6 +81,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -74,6 +94,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
@@ -83,6 +107,10 @@ const Public = () => {
       amount: "0.001",
       txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
@@ -92,6 +120,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
@@ -101,6 +133,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -110,6 +146,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -119,6 +159,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -128,6 +172,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
@@ -137,6 +185,10 @@ const Public = () => {
       amount: "0.001",
       txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
@@ -146,6 +198,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
@@ -155,6 +211,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -164,6 +224,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -173,6 +237,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -182,6 +250,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
@@ -191,6 +263,10 @@ const Public = () => {
       amount: "0.001",
       txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
@@ -200,6 +276,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
@@ -209,6 +289,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -218,6 +302,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -227,6 +315,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -236,6 +328,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
@@ -245,6 +341,10 @@ const Public = () => {
       amount: "0.001",
       txnhash: "0x67f1t2yqdw98617dqwx78gf23dewgg8v7123vdqwx7c",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
@@ -254,6 +354,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0x0912qwbcws78g12dbqx782d3g87q71h83dec8jd20xh",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x9wqdihnw1qs93q67f3qwbewq823g6732dq9783",
@@ -263,6 +367,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -272,6 +380,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -281,6 +393,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "private",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
     {
       sender: "0x78675rtvhyhw2edcscds12dxf23uidsgc23dw1",
@@ -290,6 +406,10 @@ const Public = () => {
       amount: "0.0234",
       txnhash: "0xg7823de84f3f8vf2dewjvsdhcxg239dwegc8923ewdg",
       type: "public",
+      iswithdrawn: false,
+      randomnumber: "123456",
+      receiver: "0x9wqdihnwqs993q67f3qwbewq823g6732dq9783",
+      token: "ETH",
     },
   ];
   const [direction, setDirection] = useState<"left" | "right">("left");

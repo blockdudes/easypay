@@ -1,6 +1,6 @@
 import { ThirdwebClient } from "thirdweb";
 import { ethers } from "ethers";
-import { Umbra, StealthKeyRegistry } from "@umbracash/umbra-js"
+import { Umbra, StealthKeyRegistry } from "@umbracash/umbra-js";
 
 export type Transaction = {
   sender: string;
@@ -12,7 +12,7 @@ export type Transaction = {
   type: "private" | "public";
 };
 
-export interface transactionHistoryType {
+export type transactionHistoryType = {
   sender: string;
   chain: string;
   date: string;
@@ -24,15 +24,14 @@ export interface transactionHistoryType {
   receiver: string;
   token: string;
   type: "private" | "public";
-} 
+};
 
-
-export interface ThirdwebState {
+export type ThirdwebState = {
   client: ThirdwebClient;
   rpcRequest: any;
-}
+};
 
-export interface ConnectWalletInterface {
+export type ConnectWalletInterface = {
   provider: ethers.providers.Web3Provider | null;
   signer: ethers.providers.JsonRpcSigner | null;
   address: string | null;
@@ -40,4 +39,4 @@ export interface ConnectWalletInterface {
   stealthKeyRegistry: StealthKeyRegistry | null;
   error: string | null;
   loading: boolean;
-}
+};
