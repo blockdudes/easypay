@@ -19,8 +19,10 @@ import { assetReceiverFactoryInterface } from "./utils/interface";
 const app = express();
 app.use(express.json());
 
-const mongoString =
-  `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/?retryWrites=true&w=majority&appName=Cluster0`;
+// const mongoString =
+//   `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/?retryWrites=true&w=majority&appName=Cluster0`;
+
+const mongoString = "mongodb+srv://somyaranjankhatua122:ZbwJwCNktTPZCQSs@cluster0.ji2bsuj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 const database = mongoose.connection;
 mongoose.connect(mongoString);
 database.on("error", (error) => {
@@ -31,9 +33,9 @@ database.once("connected", () => {
   console.log("Database Connected");
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   return console.log(
-    `Express is listening at http://localhost:${process.env.PORT}`
+    `Express is listening at http://localhost:${process.env.PORT || 3000}`
   );
 });
 
@@ -43,6 +45,7 @@ app.get("/", (req, res) => {
   // createAddressActivityWebHook(assetFactoryAddress)
   res.send("Hello World!");
 });
+
 
 app.post("/asset-receiver-deployed", (req, res) => {
   try {
