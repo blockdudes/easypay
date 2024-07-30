@@ -159,3 +159,40 @@ const saveAssetReceiverInDb = async (
   });
   await assetReceiver.save();
 };
+
+app.get("/get-asset-receiver",
+  async (req, res) => {
+    const owner = req.query.owner;
+    if (!owner) {
+      return res.status(400).send("Owner is required");
+    }
+    try {
+      const assetReceivers = await AssetReceiver.find({ owner });
+      if (!assetReceivers) {
+        return res.status(404).send("No asset found for the owner");
+      }
+      console.log(assetReceivers);
+      res.status(200).send(assetReceivers);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+app.get("/get-transfer-info", async (req, res) => {
+  const owner = req.query.owner;
+  if (!owner) {
+    return res.status(400).send("Owner is required");
+  }
+  try {
+    const transferInfo = await AssetTransfer.find({ to: owner });
+    if (!transferInfo) {
+      return res.status(404).send("Unable to get transfer info");
+    }
+    res.status(200).send(transferInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
