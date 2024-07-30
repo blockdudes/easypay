@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Hero from "./pages/Hero";
 import Receive from "./pages/Receive";
@@ -27,7 +21,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Hero />} />
         <Route path="/public" element={<Public />} />
         <Route path="/private" element={<Private />} />
-        <Route path="/onboarding">
+        <Route path="/onboarding" >
           <Route path="/onboarding/public" element={<OnboardingPublic />} />
           <Route path="/onboarding/private" element={<OnboardingPrivate />} />
         </Route>
@@ -60,7 +54,6 @@ function App() {
 }
 
 export default App;
-
 
 // factory arbitrum sepolia: 0x3558C2D26A26D1aeAbA39503017137D8DEBb9337
 // factory sepolia: 0x9769c95e46681a9BF9A6Bfa303bef1B04C636e1D

@@ -15,6 +15,7 @@ module.exports = withMT({
         "app-brown": "#665243",
       },
       backgroundImage: {
+        "app-gradient": `url("/app-gradient.svg")`,
         "public-gradient": `url("/public-gradient.svg")`,
         "private-gradient": `url("/private-gradient.svg")`,
         "withdraw-gradient": `linear-gradient(103deg, rgba(250,221,182,1) 0%, rgba(148,131,108,1) 100%)`,
