@@ -19,8 +19,10 @@ import { assetReceiverFactoryInterface } from "./utils/interface";
 const app = express();
 app.use(express.json());
 
-const mongoString =
-  `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/?retryWrites=true&w=majority&appName=Cluster0`;
+// const mongoString =
+//   `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/?retryWrites=true&w=majority&appName=Cluster0`;
+
+const mongoString = "mongodb+srv://somyaranjankhatua122:ZbwJwCNktTPZCQSs@cluster0.ji2bsuj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 const database = mongoose.connection;
 mongoose.connect(mongoString);
 database.on("error", (error) => {
@@ -31,9 +33,9 @@ database.once("connected", () => {
   console.log("Database Connected");
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   return console.log(
-    `Express is listening at http://localhost:${process.env.PORT}`
+    `Express is listening at http://localhost:${process.env.PORT || 3000}`
   );
 });
 
@@ -43,6 +45,7 @@ app.get("/", (req, res) => {
   // createAddressActivityWebHook(assetFactoryAddress)
   res.send("Hello World!");
 });
+
 
 app.post("/asset-receiver-deployed", (req, res) => {
   try {
@@ -156,3 +159,40 @@ const saveAssetReceiverInDb = async (
   });
   await assetReceiver.save();
 };
+
+app.get("/get-asset-receiver",
+  async (req, res) => {
+    const owner = req.query.owner;
+    if (!owner) {
+      return res.status(400).send("Owner is required");
+    }
+    try {
+      const assetReceivers = await AssetReceiver.find({ owner });
+      if (!assetReceivers) {
+        return res.status(404).send("No asset found for the owner");
+      }
+      console.log(assetReceivers);
+      res.status(200).send(assetReceivers);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
+app.get("/get-transfer-info", async (req, res) => {
+  const owner = req.query.owner;
+  if (!owner) {
+    return res.status(400).send("Owner is required");
+  }
+  try {
+    const transferInfo = await AssetTransfer.find({ to: owner });
+    if (!transferInfo) {
+      return res.status(404).send("Unable to get transfer info");
+    }
+    res.status(200).send(transferInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});

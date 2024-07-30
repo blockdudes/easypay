@@ -1,0 +1,3 @@
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+const assetReceiverFactoryDeployTopic = "0xD314fB759ebA311B7D66DF62435333AD59d5cC9d";
+export { ZERO_ADDRESS, assetReceiverFactoryDeployTopic };

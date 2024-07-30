@@ -1,11 +1,79 @@
 import { Card, Typography, Input } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { prepareContractCall, sendTransaction, getContract } from "thirdweb";
+import { assetReceiverFactoryAbi } from "../abis/assetReceiverFactoryAbi";
+import { assetReceiverFactoryDeployTopic } from "../utils/constant";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+
+import { sepolia } from "thirdweb/chains";
+import { useActiveAccount } from "thirdweb/react";
+
+import { RootState } from "../app/store";
+import { ConnectWalletButton } from "../components/ConnectWalletButton";
+
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import { connectWallet } from "../app/features/connectWalletSlice";
+
+import { ethers } from "ethers";
 import { motion } from "framer-motion";
 
 export const OnboardingPublicCard = () => {
   const [chain, setChain] = useState<string>("");
   const [token, setToken] = useState<string>("");
   const [address, setAddress] = useState<string>("");
+
+  const { client } = useAppSelector((state) => state.thirdWeb);
+  const dispatch = useAppDispatch();
+  const account = useActiveAccount();
+
+  const setup = async () => {
+    try {
+      const assetReceiverFactoryContract = getContract({
+        address: assetReceiverFactoryDeployTopic,
+        abi: assetReceiverFactoryAbi as any,
+        client: client,
+        chain: sepolia
+      });
+
+      let salt = ethers.utils.hexlify(ethers.utils.randomBytes(32));
+      if (salt.startsWith("0x")) {
+        salt = salt.slice(2);
+      }
+      console.log(salt);
+
+      const tx = await prepareContractCall({
+        contract: assetReceiverFactoryContract,
+        method: "function deploy(bytes32 _salt, address token, uint256 chainId) public returns (address)",
+        params: [`0x${salt}`, token, 11155111n],
+        gas: BigInt(1000000),
+      });
+
+      console.log(tx);
+
+
+
+      console.log(account);
+      const result = account && (await sendTransaction({
+        transaction: tx,
+        account: account
+      }));
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const connectionStatus = useActiveWalletConnectionStatus();
+  useEffect(() => {
+    console.log(connectionStatus);
+    if (connectionStatus === "connected") {
+      console.log("Recieve: connected");
+      dispatch(connectWallet());
+    } else {
+      console.log("not connected");
+      dispatch(connectWallet());
+    }
+  }, [connectionStatus])
   const [errors, setErrors] = useState({
     chain: false,
     token: false,
@@ -94,6 +162,10 @@ export const OnboardingPublicCard = () => {
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
       >
+        <div className="border">
+        <ConnectWalletButton />
+      </div>
+        <button onClick={setup}>Click Me</button>
         <div className="flex-1 grid grid-cols-2 grid-rows-2 justify-center items-center gap-x-5 gap-y-2 p-5">
           <motion.div
             className="flex flex-col justify-center items-start gap-1"
