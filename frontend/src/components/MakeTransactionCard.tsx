@@ -2,9 +2,8 @@ import { Card, Input } from "@material-tailwind/react";
 import { useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 
-export const MakeTransactionCard = () => {
-  const [token, setToken] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+export const MakeTransactionCard = ({ amount, token, setAmount, setToken }: { amount: string, token: string, setAmount: (e: string) => void, setToken: (e: string) => void }) => {
+  
   const [errors, setErrors] = useState({ token: false, amount: false });
 
   const tokenControls = useAnimation();

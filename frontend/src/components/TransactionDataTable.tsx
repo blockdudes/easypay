@@ -1,7 +1,7 @@
 import { Typography, Button, Card } from "@material-tailwind/react";
-import { Transaction } from "../types/types";
 import WithdrawDialog from "./WithdrawDialog";
 import { useState } from "react";
+import { transactionHistoryType } from "../types/types";
 import { motion } from "framer-motion";
 
 export const TransactionDataTable = ({
@@ -10,14 +10,14 @@ export const TransactionDataTable = ({
   onWithdraw,
 }: {
   headers: string[];
-  transactions: Transaction[];
-  onWithdraw?: (transaction: Transaction) => void | undefined;
+  transactions: transactionHistoryType[];
+  onWithdraw?: (transaction: transactionHistoryType) => void | undefined;
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
+    useState<transactionHistoryType | null>(null);
 
-  const handleOpenDialog = (transaction: Transaction) => {
+  const handleOpenDialog = (transaction: transactionHistoryType) => {
     setSelectedTransaction(transaction);
     setOpenDialog(true);
   };
@@ -26,6 +26,7 @@ export const TransactionDataTable = ({
     setOpenDialog(false);
     setSelectedTransaction(null);
   };
+
   return (
     <motion.div
       className="h-full w-full"
@@ -69,103 +70,119 @@ export const TransactionDataTable = ({
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction: Transaction, index: number) => {
-              return (
-                <tr key={index} className="h-20">
-                  <td className="p-4 text-center">{index + 1}</td>
-                  <td className="p-4 text-center">
-                    <Typography
-                      variant="small"
-                      color="black"
-                      className="font-normal"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      {transaction.sender.slice(0, onWithdraw ? 6 : 12)}...
-                      {transaction.sender.slice(-(onWithdraw ? 6 : 12))}
-                    </Typography>
-                  </td>
-                  <td className="p-4 text-center">
-                    <Typography
-                      variant="small"
-                      color="black"
-                      className="font-normal"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      {transaction.date}
-                    </Typography>
-                  </td>
-                  <td className="p-4 text-center">
-                    <Typography
-                      variant="small"
-                      color="black"
-                      className="font-normal"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      {transaction.chain}
-                    </Typography>
-                  </td>
-                  <td className="p-4 text-center">
-                    <Typography
-                      variant="small"
-                      color="black"
-                      className="font-normal"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      {transaction.asset}
-                    </Typography>
-                  </td>
-                  <td className="p-4 text-center">
-                    <Typography
-                      variant="small"
-                      color="black"
-                      className="font-normal"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      {transaction.amount}
-                    </Typography>
-                  </td>
-                  <td className="p-4 text-center">
-                    <Typography
-                      variant="small"
-                      color="black"
-                      className="font-normal"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
-                    >
-                      {transaction.txnhash.slice(0, onWithdraw ? 8 : 16)}...
-                      {transaction.txnhash.slice(-(onWithdraw ? 8 : 16))}
-                    </Typography>
-                  </td>
-                  {onWithdraw && (
+            {transactions.map(
+              (transaction: transactionHistoryType, index: number) => {
+                return (
+                  <tr key={index} className="h-20">
+                    <td className="p-4 text-center">{index + 1}</td>
                     <td className="p-4 text-center">
-                      <Button
-                        variant="gradient"
-                        size="sm"
-                        color="brown"
-                        className="w-full text-sm py-2 mx-0 font-medium normal-case transition-all duration-300 hover:scale-105 hover:bg-brown-600"
-                        onClick={() => handleOpenDialog(transaction)}
+                      <Typography
+                        variant="small"
+                        color="black"
+                        className="font-normal"
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                       >
-                        Withdraw
-                      </Button>
+                        {transaction.sender.slice(0, onWithdraw ? 6 : 12)}...
+                        {transaction.sender.slice(-(onWithdraw ? 6 : 12))}
+                      </Typography>
                     </td>
-                  )}
-                </tr>
-              );
-            })}
+                    <td className="p-4 text-center">
+                      <Typography
+                        variant="small"
+                        color="black"
+                        className="font-normal"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {transaction.date}
+                      </Typography>
+                    </td>
+                    <td className="p-4 text-center">
+                      <Typography
+                        variant="small"
+                        color="black"
+                        className="font-normal"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {transaction.chain}
+                      </Typography>
+                    </td>
+                    <td className="p-4 text-center">
+                      <Typography
+                        variant="small"
+                        color="black"
+                        className="font-normal"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {transaction.asset}
+                      </Typography>
+                    </td>
+                    <td className="p-4 text-center">
+                      <Typography
+                        variant="small"
+                        color="black"
+                        className="font-normal"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {transaction.amount}
+                      </Typography>
+                    </td>
+                    <td className="p-4 text-center">
+                      <Typography
+                        variant="small"
+                        color="black"
+                        className="font-normal"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {transaction.txnhash.slice(0, onWithdraw ? 8 : 16)}...
+                        {transaction.txnhash.slice(-(onWithdraw ? 8 : 16))}
+                      </Typography>
+                    </td>
+                    {onWithdraw && (
+                      <td className="p-4 text-center">
+                        {transaction.iswithdrawn ? (
+                          <Button
+                            variant="gradient"
+                            size="sm"
+                            color="green"
+                            className="w-full text-sm py-2 mx-0 font-medium normal-case transition-all duration-300 hover:scale-105 hover:bg-brown-600"
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                          >
+                            Withdrawn
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="gradient"
+                            size="sm"
+                            color="brown"
+                            className="w-full text-sm py-2 mx-0 font-medium normal-case transition-all duration-300 hover:scale-105 hover:bg-brown-600"
+                            onClick={() => handleOpenDialog(transaction)}
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                          >
+                            Withdraw
+                          </Button>
+                        )}
+                      </td>
+                    )}
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
       </Card>

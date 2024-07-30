@@ -1,34 +1,38 @@
-import { Button, Spinner } from "@material-tailwind/react";
-import { useState } from "react";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
+import { createWallet, walletConnect, inAppWallet } from "thirdweb/wallets";
+
+import { ConnectButton } from "thirdweb/react";
 
 export const ConnectWalletButton = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = () => {
-    setIsLoading(true);
-    // Simulating connection process
-    setTimeout(() => setIsLoading(false), 2000);
-  };
+  const { client } = useAppSelector((state: RootState) => state.thirdWeb);
+  const wallets = [
+    createWallet("io.metamask"),
+    createWallet("com.coinbase.wallet"),
+    walletConnect(),
+    inAppWallet({
+      auth: {
+        options: ["facebook", "google"],
+      },
+    }),
+  ];
 
   return (
-    <Button
-      className="w-72 rounded-full bg-gray-500 text-lg text-black font-normal normal-case py-3"
-      size="lg"
-      onClick={handleClick}
-      disabled={isLoading}
-      placeholder={undefined}
-      onPointerEnterCapture={undefined}
-      onPointerLeaveCapture={undefined}
-    >
-      {isLoading ? (
-        <Spinner
-          className="h-4 w-4"
-          onPointerEnterCapture={undefined}
-          onPointerLeaveCapture={undefined}
-        />
-      ) : (
-        "Connect Wallet"
-      )}
-    </Button>
+    // <Button
+    //   className="w-72 rounded-full bg-gray-500 text-lg text-black font-normal normal-case py-3"
+    //   size="lg"
+    //   placeholder={undefined}
+    //   onPointerEnterCapture={undefined}
+    //   onPointerLeaveCapture={undefined}
+    // >
+    //   Connect Wallet
+    // </Button>
+
+    <ConnectButton
+      client={client}
+      wallets={wallets}
+      theme={"light"}
+      connectModal={{ size: "wide" }}
+    />
   );
 };

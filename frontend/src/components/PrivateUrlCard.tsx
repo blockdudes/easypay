@@ -1,11 +1,19 @@
 import { Card, IconButton } from "@material-tailwind/react";
 import { useState } from "react";
 import { TbCopyCheck, TbCopy } from "react-icons/tb";
+import { useAppSelector } from "../app/hooks";
+import { RootState } from "../app/store";
 import { motion } from "framer-motion";
 
 export const PrivateUrlCard = () => {
+  const { address } = useAppSelector((state: RootState) => state.connectWallet);
   const [copied, setCopied] = useState(false);
-  const address = "0x23nsja321msdann312jmsanda";
+
+
+  // const address = "0x23nsja321msdann312jmsanda";
+
+  // console.log();
+
   const url =
     location.href.split("/").slice(0, -1).join("/") +
     "/private/receive/" +
@@ -18,6 +26,8 @@ export const PrivateUrlCard = () => {
       setCopied(false);
     }, 2000);
   };
+
+  
 
   return (
     <Card
