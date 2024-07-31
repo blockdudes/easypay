@@ -11,12 +11,12 @@ import {
 import { assetReceiverFactoryAbi } from "../abis/assetReceiverFactoryAbi";
 import { connectWallet } from "../app/features/connectWalletSlice";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { assetReceiverFactoryDeployTopic } from "../utils/constant";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
 
-import { SEPOLIA_FACTORY_ADDRESS, ARBITRUM_SEPOLIA_FACTORY_ADDRESS, chainIdToAddressMap } from "../utils/constant";
+import { chainIdToAddressMap } from "../utils/constant";
 
 import { ethers } from "ethers";
+import toast from "react-hot-toast";
 
 const OnboardingPublic = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,14 +25,17 @@ const OnboardingPublic = () => {
   const dispatch = useAppDispatch();
   const account = useActiveAccount();
   const [chain, setChain] = useState<Chain>(sepolia);
-  const [token, setToken] = useState<string>("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE");
+  const [token, setToken] = useState<string>(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+  );
 
   console.log("chain: ob", chain);
 
   const setup = async (token: string, chain: Chain) => {
     try {
-
-      const assetReceiverFactoryContractAddress = chainIdToAddressMap.get(chain.id);
+      const assetReceiverFactoryContractAddress = chainIdToAddressMap.get(
+        chain.id
+      );
       if (assetReceiverFactoryContractAddress) {
         console.log(assetReceiverFactoryContractAddress);
         const assetReceiverFactoryContract = getContract({
@@ -47,7 +50,12 @@ const OnboardingPublic = () => {
           // if (salt.startsWith("0x")) {
           //   salt = salt.slice(2).concat("123456789012");
           // }
-          let salt = ethers.utils.hexZeroPad(ethers.utils.keccak256(ethers.utils.toUtf8Bytes(account?.address.concat("10"))), 32);
+          let salt = ethers.utils.hexZeroPad(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(account?.address.concat("10"))
+            ),
+            32
+          );
           if (salt.startsWith("0x")) {
             salt = salt.slice(2);
           }
@@ -60,7 +68,7 @@ const OnboardingPublic = () => {
             gas: BigInt(1000000),
           });
 
-          console.log(tx)
+          console.log(tx);
 
           const result =
             account &&
@@ -71,8 +79,11 @@ const OnboardingPublic = () => {
           console.log(result);
         }
       }
-    } catch (error) {
+      toast.success("Public profile setup successful");
+    } catch (error: any) {
       console.log(error);
+      toast.error(error?.message ?? "Something went wrong");
+      throw error;
     }
   };
 
@@ -90,10 +101,13 @@ const OnboardingPublic = () => {
 
   const handleNextStep = () => {
     setIsLoading(true);
-    setup(token, chain).then(() => {
-      setIsLoading(false);
-      navigate("/onboarding/private");
-    });
+    setup(token, chain)
+      .then(() => {
+        navigate("/onboarding/private");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (

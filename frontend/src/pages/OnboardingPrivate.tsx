@@ -2,6 +2,7 @@ import { OnboardingPrivateCard } from "../components/OnboardingPrivateCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NextStepButton } from "../components/NextStepButton";
+import toast from "react-hot-toast";
 
 const OnboardingPrivate = () => {
   const [isLastStep, setIsLastStep] = useState(false);
@@ -10,7 +11,7 @@ const OnboardingPrivate = () => {
 
   const handleNextStep = () => {
     setIsLoading(true);
-    // Simulating payment process
+    toast.success("Private profile setup successful");
     setTimeout(() => {
       setIsLoading(false);
       navigate("/public", { replace: true });

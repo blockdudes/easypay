@@ -6,7 +6,7 @@ import {
   Stepper,
   Spinner,
 } from "@material-tailwind/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaSignature } from "react-icons/fa";
 import { GrTransaction } from "react-icons/gr";
 import { MdDone } from "react-icons/md";
@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { ConnectWalletButton } from "./ConnectWalletButton";
+import toast from "react-hot-toast";
 
 export const OnboardingPrivateCard = ({
   isLastStep,
@@ -25,7 +26,6 @@ export const OnboardingPrivateCard = ({
 }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const [spendingKey, setSpendingKey] = useState<string | null>(null);
   const [viewingKey, setViewingKey] = useState<string | null>(null);
@@ -42,8 +42,9 @@ export const OnboardingPrivateCard = ({
         setSpendingKey(spendingKeyPair.publicKeyHex);
         setViewingKey(viewingKeyPair.publicKeyHex);
       }
-    } catch (error) {
-      console.log(error);
+      toast.success("Signature successful");
+    } catch (error: any) {
+      toast.error(error?.message ?? "Something went wrong");
       throw error;
     }
   };
@@ -58,14 +59,14 @@ export const OnboardingPrivateCard = ({
       viewingKey
     ) {
       try {
-        const signed = await stealthKeyRegistry.setStealthKeys(
+        await stealthKeyRegistry.setStealthKeys(
           spendingKey,
           viewingKey,
           signer
         );
-        console.log(signed);
-      } catch (error) {
-        console.log(error);
+        toast.success("Transaction successful");
+      } catch (error: any) {
+        toast.error(error?.message ?? "Something went wrong");
         throw error;
       }
     }
@@ -77,25 +78,12 @@ export const OnboardingPrivateCard = ({
       (activeStep === 0 ? sign : sendTransaction)()
         .then(() => {
           setActiveStep((cur) => cur + 1);
-          setIsLoading(false);
         })
-        .catch(() => {
-          setError(true);
+        .finally(() => {
           setIsLoading(false);
         });
     }
   };
-
-  const shakeAnimation = {
-    x: [0, -10, 10, -10, 10, 0],
-    transition: { duration: 0.4 },
-  };
-
-  useEffect(() => {
-    if (error) {
-      setTimeout(() => setError(false), 500);
-    }
-  }, [error]);
 
   return (
     <motion.div
@@ -174,57 +162,55 @@ export const OnboardingPrivateCard = ({
           onPointerEnterCapture={undefined}
           onPointerLeaveCapture={undefined}
         >
-          <motion.div animate={error ? shakeAnimation : {}}>
-            <Stepper
-              className="w-[500px]"
-              activeStep={activeStep}
-              isLastStep={(value) => setIsLastStep(value)}
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
-            >
-              {[
-                { icon: FaSignature, label: "Signature" },
-                { icon: GrTransaction, label: "Transaction" },
-                { icon: MdDone, label: "Completed" },
-              ].map((step, index) => (
-                <Step
-                  key={index}
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                >
-                  <step.icon className="h-5 w-5" />
-                  <div className="absolute -bottom-[3.5rem] w-max text-center">
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+          <Stepper
+            className="w-[500px]"
+            activeStep={activeStep}
+            isLastStep={(value) => setIsLastStep(value)}
+            placeholder={undefined}
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
+          >
+            {[
+              { icon: FaSignature, label: "Signature" },
+              { icon: GrTransaction, label: "Transaction" },
+              { icon: MdDone, label: "Completed" },
+            ].map((step, index) => (
+              <Step
+                key={index}
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                <step.icon className="h-5 w-5" />
+                <div className="absolute -bottom-[3.5rem] w-max text-center">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                  >
+                    <Typography
+                      variant="h6"
+                      color={activeStep === index ? "blue-gray" : "gray"}
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
                     >
-                      <Typography
-                        variant="h6"
-                        color={activeStep === index ? "blue-gray" : "gray"}
-                        placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                      >
-                        Step {index + 1}
-                      </Typography>
-                      <Typography
-                        color={activeStep === index ? "blue-gray" : "gray"}
-                        className="font-normal"
-                        placeholder={undefined}
-                        onPointerEnterCapture={undefined}
-                        onPointerLeaveCapture={undefined}
-                      >
-                        {step.label}
-                      </Typography>
-                    </motion.div>
-                  </div>
-                </Step>
-              ))}
-            </Stepper>
-          </motion.div>
+                      Step {index + 1}
+                    </Typography>
+                    <Typography
+                      color={activeStep === index ? "blue-gray" : "gray"}
+                      className="font-normal"
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      {step.label}
+                    </Typography>
+                  </motion.div>
+                </div>
+              </Step>
+            ))}
+          </Stepper>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               className="w-48"
