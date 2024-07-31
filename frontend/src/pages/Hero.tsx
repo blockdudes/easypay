@@ -4,7 +4,7 @@ import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { connectWallet } from "../app/features/connectWalletSlice";
 import { Button, Spinner, Typography } from "@material-tailwind/react";
 import { motion } from "framer-motion";
@@ -16,6 +16,12 @@ const Hero = () => {
   const account = useActiveAccount();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const publicOnBoardingData = useAppSelector(
+    (state) => state.publicOnBoarding
+  );
+
+  console.log(publicOnBoardingData);
 
   useEffect(() => {
     if (connectionStatus === "connected") {
@@ -32,15 +38,12 @@ const Hero = () => {
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      var onboarded = false;
-      if (onboarded) {
-        navigate("/public");
-      } else {
-        navigate("/onboarding/public");
-      }
-    }, 2000);
+    if (!publicOnBoardingData.error) {
+      navigate("/public");
+    } else {
+      navigate("/onboarding/public");
+    }
+    setLoading(false);
   };
 
   return (

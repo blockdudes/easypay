@@ -26,12 +26,12 @@ export const OnboardingPublicCard = ({
   const chains = [sepolia, arbitrumSepolia];
   const tokens = {
     [sepolia.id]: [
-      { address: "0xNATIVE", name: "sETH" },
+      { address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", name: "sETH" },
       { address: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", name: "sUSDC" },
       { address: "0x27CEA6Eb8a21Aae05Eb29C91c5CA10592892F584", name: "sUSDT" },
     ],
     [arbitrumSepolia.id]: [
-      { address: "0xNATIVE", name: "sETH" },
+      { address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", name: "sETH" },
       { address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d", name: "sUSDC" },
     ],
   };
