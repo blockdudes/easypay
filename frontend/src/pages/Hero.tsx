@@ -1,34 +1,37 @@
 import { useEffect } from "react";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
 import { useActiveWalletConnectionStatus, useActiveAccount } from "thirdweb/react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../app/hooks";
 
 const Hero = () => {
     const connectionStatus = useActiveWalletConnectionStatus();
     const account = useActiveAccount();
+    const navigate = useNavigate();
+
+    // const dispatch = useAppDispatch();
+    const publicOnBoardingData = useAppSelector(state => state.publicOnBoarding);
+    
+    console.log(publicOnBoardingData);
 
     useEffect(() => {
         if(connectionStatus === "connected") {
-            
+            if (!publicOnBoardingData.error && !publicOnBoardingData.loading) {
+                navigate("/public")
+            } else {
+                navigate("/onboarding/public")
+            }
         } else {
             console.log("wallet not connected");
         }
     }, [connectionStatus]);
 
 
-    const onBoardingData = async () => {
-        try {
-            return (await axios.get(`http://localhost:3000/get-asset-receiver?owner=${account?.address}`)).data;
-        }catch(error) {
-            console.log(error);
-        }
-    }
+    
 
     return (
         <div>
             Hero
-
-            <button onClick={onBoardingData}>click me</button>
 
             <ConnectWalletButton />
         </div>

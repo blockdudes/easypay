@@ -53,3 +53,6 @@ contract AssetReceiverFactory {
         return abi.encodePacked(bytecode, abi.encode(user));
     }
 }
+
+
+// 0xE7fC3a50a79985dC175C93790035A6Fbf342de30

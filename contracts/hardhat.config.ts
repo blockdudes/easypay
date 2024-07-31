@@ -25,12 +25,19 @@ const config: HardhatUserConfig = {
   networks: {
     arb_sepolia: {
       url: `https://endpoints.omniatech.io/v1/arbitrum/sepolia/public`,
-      accounts: ["49c9a17b9e705a0749cd2a0d358bec619a6e056e343c4d10c4619b93a83b9369"],
+      accounts: ["6cbcd99c28d67cf0f70b14e62f84705776c4d40446844934c432544b1489a07f"],
     },
     sepolia: {
       url: `https://ethereum-sepolia-rpc.publicnode.com`,
       accounts: ["49c9a17b9e705a0749cd2a0d358bec619a6e056e343c4d10c4619b93a83b9369"],
     },
+  },
+  ignition: {
+    strategyConfig: {
+      create2: {
+        salt: "0x6c01da1f3d2b24835dbafcd51d635a62ee366f68fe323c4f202098fc66b1a856"
+      }
+    }
   },
   etherscan: {
     apiKey: {

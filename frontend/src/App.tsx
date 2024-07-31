@@ -12,11 +12,12 @@ import Public from "./pages/Public";
 import Private from "./pages/Private";
 import OnboardingPublic from "./pages/OnboardingPublic";
 import OnboardingPrivate from "./pages/OnboardingPrivate";
-import { useActiveWalletConnectionStatus } from "thirdweb/react";
+import { useActiveWalletConnectionStatus, useActiveAccount } from "thirdweb/react";
 import { useEffect } from "react";
 import { useAppDispatch } from "./app/hooks";
 
 import { connectWallet } from "./app/features/connectWalletSlice";
+import { fetchOnBoardingData } from "./app/features/userOnbroadDataSlice";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -40,11 +41,14 @@ function AnimatedRoutes() {
 function App() {
   const dispatch = useAppDispatch();
   const connectionStatus = useActiveWalletConnectionStatus();
+  const account = useActiveAccount();
 
   useEffect(() => {
     if (connectionStatus === "connected") {
-      console.log("connected");
       dispatch(connectWallet());
+      if (account?.address) {
+        dispatch(fetchOnBoardingData({ signer: account?.address }))
+      }
     } else {
       console.log("not connected");
     }
