@@ -9,6 +9,7 @@ import { connectWallet } from "../app/features/connectWalletSlice";
 import { Button, Spinner, Typography } from "@material-tailwind/react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const Hero = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +35,7 @@ const Hero = () => {
 
   const launchApp = () => {
     if (!account) {
-      alert("Please connect your wallet to launch the app");
+      toast.error("Please connect your wallet to launch the app");
       return;
     }
     setLoading(true);

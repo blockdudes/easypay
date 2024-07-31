@@ -46,15 +46,6 @@ const Receive = () => {
 
   const send = async () => {
     try {
-      console.log(
-        provider,
-        signer,
-        umbra,
-        stealthKeyRegistry,
-        amount,
-        token,
-        address
-      );
       if (
         provider &&
         signer &&

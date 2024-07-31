@@ -6,12 +6,16 @@ import Public from "./pages/Public";
 import Private from "./pages/Private";
 import OnboardingPublic from "./pages/OnboardingPublic";
 import OnboardingPrivate from "./pages/OnboardingPrivate";
-import { useActiveWalletConnectionStatus, useActiveAccount } from "thirdweb/react";
+import {
+  useActiveWalletConnectionStatus,
+  useActiveAccount,
+} from "thirdweb/react";
 import { useEffect } from "react";
 import { useAppDispatch } from "./app/hooks";
 
 import { connectWallet } from "./app/features/connectWalletSlice";
 import { fetchOnBoardingData } from "./app/features/userOnbroadDataSlice";
+import { Toaster } from "react-hot-toast";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -22,7 +26,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Hero />} />
         <Route path="/public" element={<Public />} />
         <Route path="/private" element={<Private />} />
-        <Route path="/onboarding" >
+        <Route path="/onboarding">
           <Route path="/onboarding/public" element={<OnboardingPublic />} />
           <Route path="/onboarding/private" element={<OnboardingPrivate />} />
         </Route>
@@ -41,7 +45,7 @@ function App() {
     if (connectionStatus === "connected") {
       dispatch(connectWallet());
       if (account?.address) {
-        dispatch(fetchOnBoardingData({ signer: account?.address }))
+        dispatch(fetchOnBoardingData({ signer: account?.address }));
       }
     } else {
       console.log("not connected");
@@ -50,6 +54,7 @@ function App() {
 
   return (
     <div className="w-screen h-screen">
+      <Toaster />
       <BrowserRouter>
         <AnimatedRoutes />
       </BrowserRouter>
