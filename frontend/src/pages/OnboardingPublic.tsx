@@ -2,11 +2,17 @@ import { OnboardingPublicCard } from "../components/OnboardingPublicCard";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { NextStepButton } from "../components/NextStepButton";
-import { getContract, prepareContractCall, sendTransaction } from "thirdweb";
+import {
+  getContract,
+  prepareContractCall,
+  sendAndConfirmTransaction,
+} from "thirdweb";
 import { Chain, sepolia } from "thirdweb/chains";
 import {
   useActiveAccount,
+  useSwitchActiveWalletChain,
   useActiveWalletConnectionStatus,
+  useActiveWalletChain,
 } from "thirdweb/react";
 import { assetReceiverFactoryAbi } from "../abis/assetReceiverFactoryAbi";
 import { connectWallet } from "../app/features/connectWalletSlice";
@@ -29,9 +35,13 @@ const OnboardingPublic = () => {
     "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
   );
 
-  console.log("chain: ob", chain);
+  const switchChain = useSwitchActiveWalletChain();
+  const currentChain = useActiveWalletChain();
 
   const setup = async (token: string, chain: Chain) => {
+    if (currentChain?.id !== chain.id) {
+      await switchChain(chain);
+    }
     try {
       const assetReceiverFactoryContractAddress = chainIdToAddressMap.get(
         chain.id
@@ -52,7 +62,7 @@ const OnboardingPublic = () => {
           // }
           let salt = ethers.utils.hexZeroPad(
             ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes(account?.address.concat("10"))
+              ethers.utils.toUtf8Bytes(account?.address.concat("786"))
             ),
             32
           );
@@ -72,7 +82,7 @@ const OnboardingPublic = () => {
 
           const result =
             account &&
-            (await sendTransaction({
+            (await sendAndConfirmTransaction({
               transaction: tx,
               account: account,
             }));

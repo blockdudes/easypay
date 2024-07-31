@@ -5,4 +5,10 @@ import App from "./App.tsx";
 import "./index.css";
 import { ThirdwebProvider } from "thirdweb/react";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<Provider store={store}><ThirdwebProvider  ><App /></ThirdwebProvider></Provider>);
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <Provider store={store}>
+    <ThirdwebProvider>
+      <App />
+    </ThirdwebProvider>
+  </Provider>
+);
