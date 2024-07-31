@@ -4,5 +4,11 @@ export { ZERO_ADDRESS, assetReceiverFactoryDeployTopic };
 
 
 
-export const SEPOLIA_FACTORY_ADDRESS = "0x3558C2D26A26D1aeAbA39503017137D8DEBb9337";
-export const ARBITRUM_SEPOLIA_FACTORY_ADDRESS = "0x9769c95e46681a9BF9A6Bfa303bef1B04C636e1D";
+export const SEPOLIA_FACTORY_ADDRESS = "0x45Be786407a5d4953f3D24ad455FA301653A88c1";
+export const ARBITRUM_SEPOLIA_FACTORY_ADDRESS = "0x45Be786407a5d4953f3D24ad455FA301653A88c1";
+
+
+export const chainIdToAddressMap = new Map([
+    [11155111, "0x45Be786407a5d4953f3D24ad455FA301653A88c1"], // Replace 11155111 with the actual Sepolia chain ID
+    [421614, "0x45Be786407a5d4953f3D24ad455FA301653A88c1"] // Replace 421613 with the actual Arbitrum Sepolia chain ID
+]);

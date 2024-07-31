@@ -14,6 +14,8 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { assetReceiverFactoryDeployTopic } from "../utils/constant";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
 
+import { SEPOLIA_FACTORY_ADDRESS, ARBITRUM_SEPOLIA_FACTORY_ADDRESS, chainIdToAddressMap } from "../utils/constant";
+
 import { ethers } from "ethers";
 
 const OnboardingPublic = () => {
@@ -23,41 +25,52 @@ const OnboardingPublic = () => {
   const dispatch = useAppDispatch();
   const account = useActiveAccount();
   const [chain, setChain] = useState<Chain>(sepolia);
-  const [token, setToken] = useState<string>("0xNATIVE");
+  const [token, setToken] = useState<string>("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE");
+
+  console.log("chain: ob", chain);
 
   const setup = async (token: string, chain: Chain) => {
     try {
-      const assetReceiverFactoryContract = getContract({
-        address: assetReceiverFactoryDeployTopic,
-        abi: assetReceiverFactoryAbi as any,
-        client: client,
-        chain: chain,
-      });
 
-      let salt = ethers.utils.hexlify(ethers.utils.randomBytes(32));
-      if (salt.startsWith("0x")) {
-        salt = salt.slice(2);
+      const assetReceiverFactoryContractAddress = chainIdToAddressMap.get(chain.id);
+      if (assetReceiverFactoryContractAddress) {
+        console.log(assetReceiverFactoryContractAddress);
+        const assetReceiverFactoryContract = getContract({
+          address: assetReceiverFactoryContractAddress,
+          abi: assetReceiverFactoryAbi as any,
+          client: client,
+          chain: chain,
+        });
+
+        // let salt = account?.address;
+        if (account?.address) {
+          // if (salt.startsWith("0x")) {
+          //   salt = salt.slice(2).concat("123456789012");
+          // }
+          let salt = ethers.utils.hexZeroPad(ethers.utils.keccak256(ethers.utils.toUtf8Bytes(account?.address.concat("10"))), 32);
+          if (salt.startsWith("0x")) {
+            salt = salt.slice(2);
+          }
+          console.log(salt);
+          const tx = prepareContractCall({
+            contract: assetReceiverFactoryContract,
+            method:
+              "function deploy(bytes32 _salt, address token, uint256 chainId) public returns (address)",
+            params: [`0x${salt}`, token, BigInt(chain.id)],
+            gas: BigInt(1000000),
+          });
+
+          console.log(tx)
+
+          const result =
+            account &&
+            (await sendTransaction({
+              transaction: tx,
+              account: account,
+            }));
+          console.log(result);
+        }
       }
-      console.log(salt);
-
-      const tx = prepareContractCall({
-        contract: assetReceiverFactoryContract,
-        method:
-          "function deploy(bytes32 _salt, address token, uint256 chainId) public returns (address)",
-        params: [`0x${salt}`, token, BigInt(chain.id)],
-        gas: BigInt(1000000),
-      });
-
-      console.log(tx);
-
-      console.log(account);
-      const result =
-        account &&
-        (await sendTransaction({
-          transaction: tx,
-          account: account,
-        }));
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
