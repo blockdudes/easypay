@@ -3,6 +3,7 @@ import WithdrawDialog from "./WithdrawDialog";
 import { useState } from "react";
 import { transactionHistoryType } from "../types/types";
 import { motion } from "framer-motion";
+import {PublicTransactionHistory} from "../types/types";
 
 export const TransactionDataTable = ({
   headers,
@@ -11,7 +12,7 @@ export const TransactionDataTable = ({
   isLoading,
 }: {
   headers: string[];
-  transactions: transactionHistoryType[];
+  transactions: transactionHistoryType[] | PublicTransactionHistory[];
   onWithdraw?: (transaction: transactionHistoryType) => void | undefined;
   isLoading: boolean;
 }) => {
@@ -71,7 +72,7 @@ export const TransactionDataTable = ({
               )}
             </tr>
           </thead>
-          <tbody className="relative">
+          <tbody>
             {isLoading ? (
               <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
                 <Spinner
@@ -107,8 +108,8 @@ export const TransactionDataTable = ({
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                       >
-                        {transaction.sender.slice(0, onWithdraw ? 6 : 12)}...
-                        {transaction.sender.slice(-(onWithdraw ? 6 : 12))}
+                        {transaction.sender && transaction.sender.slice(0, onWithdraw ? 6 : 12)}...
+                        {transaction.sender && transaction.sender.slice(-(onWithdraw ? 6 : 12))}
                       </Typography>
                     </td>
                     <td className="p-4 text-center">
@@ -168,13 +169,13 @@ export const TransactionDataTable = ({
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                       >
-                        {transaction.txnhash.slice(0, onWithdraw ? 8 : 16)}...
-                        {transaction.txnhash.slice(-(onWithdraw ? 8 : 16))}
+                        {transaction.txnhash && transaction.txnhash.slice(0, onWithdraw ? 8 : 16)}...
+                        {transaction.txnhash && transaction.txnhash.slice(-(onWithdraw ? 8 : 16))}
                       </Typography>
                     </td>
                     {onWithdraw && (
                       <td className="p-4 text-center">
-                        {transaction.iswithdrawn ? (
+                        {(transaction as transactionHistoryType).iswithdrawn ? (
                           <Button
                             variant="gradient"
                             size="sm"
@@ -192,7 +193,7 @@ export const TransactionDataTable = ({
                             size="sm"
                             color="brown"
                             className="w-full text-sm py-2 mx-0 font-medium normal-case transition-all duration-300 hover:scale-105 hover:bg-brown-600"
-                            onClick={() => handleOpenDialog(transaction)}
+                            onClick={() => handleOpenDialog(transaction as transactionHistoryType)}
                             placeholder={undefined}
                             onPointerEnterCapture={undefined}
                             onPointerLeaveCapture={undefined}
@@ -206,6 +207,7 @@ export const TransactionDataTable = ({
                 );
               })
             )}
+            <div className="flex-1"/>
           </tbody>
         </table>
       </Card>

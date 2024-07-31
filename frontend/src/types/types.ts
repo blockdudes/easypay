@@ -12,19 +12,31 @@ export type Transaction = {
   type: "private" | "public";
 };
 
-export type transactionHistoryType = {
-  sender: string;
-  chain: string;
-  date: string;
-  asset: string;
-  amount: string;
-  txnhash: string;
-  iswithdrawn: boolean;
-  randomnumber: string;
-  receiver: string;
-  token: string;
+export type PublicTransactionHistory = {
+  sender: string | null;
+  chain: string | null;
+  date: string | null;
+  asset: string | null;
+  amount: string | null;
+  txnhash: string | null;
   type: "private" | "public";
 };
+
+export type transactionHistoryType = {
+  sender: string | null;
+  chain: string | null;
+  date: string | null;
+  asset: string |null;
+  amount: string | null;
+  txnhash: string | null;
+  iswithdrawn: boolean;
+  randomnumber: string | null;
+  receiver: string | null;
+  token: string | null;
+  type: string | null;
+};
+
+
 
 export type ThirdwebState = {
   client: ThirdwebClient;

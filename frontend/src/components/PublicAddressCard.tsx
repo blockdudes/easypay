@@ -1,12 +1,11 @@
 import { Card, IconButton } from "@material-tailwind/react";
 import { useState } from "react";
 import { TbCopy, TbCopyCheck } from "react-icons/tb";
-import { useActiveAccount } from "thirdweb/react";
 import { motion } from "framer-motion";
+import { useAppSelector } from "../app/hooks";
 
 export const PublicAddressCard = () => {
   const [copied, setCopied] = useState(false);
-  const account = useActiveAccount();
 
   const handleCopy = () => {
     setCopied(true);
@@ -14,6 +13,9 @@ export const PublicAddressCard = () => {
       setCopied(false);
     }, 2000);
   };
+
+  const publicOnBoarding = useAppSelector(state => state.publicOnBoarding);
+  console.log(publicOnBoarding);
   
   return (
     <Card
@@ -26,7 +28,7 @@ export const PublicAddressCard = () => {
         <div className="text-2xl font-semibold">Public Address</div>
         <div className="w-5/6 flex items-center gap-1">
           <div className="text-xl text-black font-light truncate">
-            {account?.address}
+            {publicOnBoarding?.address}
           </div>
           <IconButton
             variant="text"

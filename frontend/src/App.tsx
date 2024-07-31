@@ -11,10 +11,12 @@ import {
   useActiveAccount,
 } from "thirdweb/react";
 import { useEffect } from "react";
-import { useAppDispatch } from "./app/hooks";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 
 import { connectWallet } from "./app/features/connectWalletSlice";
 import { fetchOnBoardingData } from "./app/features/userOnbroadDataSlice";
+import { fetchOnBoardingTxData } from "./app/features/userOnboardTxDataSlice";
+
 import { Toaster } from "react-hot-toast";
 
 function AnimatedRoutes() {
@@ -40,12 +42,17 @@ function App() {
   const dispatch = useAppDispatch();
   const connectionStatus = useActiveWalletConnectionStatus();
   const account = useActiveAccount();
+  const publicOnBoardingData = useAppSelector(state => state.publicOnBoarding);
 
   useEffect(() => {
     if (connectionStatus === "connected") {
       dispatch(connectWallet());
       if (account?.address) {
         dispatch(fetchOnBoardingData({ signer: account?.address }));
+        if (!publicOnBoardingData.error && publicOnBoardingData.address) {
+          console.log(publicOnBoardingData.address);
+          dispatch(fetchOnBoardingTxData({ contract: publicOnBoardingData.address }))
+        }
       }
     } else {
       console.log("not connected");
