@@ -93,7 +93,7 @@ const Private = () => {
   //   scan();
   // }, [provider, signer, umbra, stealthKeyRegistry]);
 
-  const handleWithdraw = (transaction: Transaction) => {
+  const handleWithdraw = (transaction: transactionHistoryType) => {
     console.log("Withdraw", transaction);
   };
 

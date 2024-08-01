@@ -29,7 +29,7 @@ export type transactionHistoryType = {
   asset: string |null;
   amount: string | null;
   txnhash: string | null;
-  iswithdrawn: boolean;
+  iswithdrawn: boolean | null;
   randomnumber: string | null;
   receiver: string | null;
   token: string | null;

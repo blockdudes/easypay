@@ -7,7 +7,7 @@ import {
   prepareContractCall,
   sendAndConfirmTransaction,
 } from "thirdweb";
-import { Chain, sepolia } from "thirdweb/chains";
+import { Chain, arbitrumSepolia, sepolia } from "thirdweb/chains";
 import {
   useActiveAccount,
   useSwitchActiveWalletChain,
@@ -39,6 +39,11 @@ const OnboardingPublic = () => {
   const currentChain = useActiveWalletChain();
 
   const setup = async (token: string, chain: Chain) => {
+    if (chain === sepolia) {
+      chain = arbitrumSepolia
+    } else {
+      chain = sepolia;
+    }
     if (currentChain?.id !== chain.id) {
       await switchChain(chain);
     }
@@ -62,7 +67,7 @@ const OnboardingPublic = () => {
           // }
           let salt = ethers.utils.hexZeroPad(
             ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes(account?.address.concat("786"))
+              ethers.utils.toUtf8Bytes(account?.address.concat("9897"))
             ),
             32
           );
@@ -90,6 +95,14 @@ const OnboardingPublic = () => {
         }
       }
       toast.success("Public profile setup successful");
+      if (chain === sepolia) {
+        chain = arbitrumSepolia
+      } else {
+        chain = sepolia;
+      }
+      if (currentChain?.id !== chain.id) {
+        await switchChain(chain);
+      }
     } catch (error: any) {
       console.log(error);
       toast.error(error?.message ?? "Something went wrong");

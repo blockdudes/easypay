@@ -99,7 +99,7 @@ const Hero = () => {
         </div>
       </motion.div>
       <motion.div
-        className="snap-y snap-mandatory overflow-y-scroll h-screen"
+        className="snap-y snap-mandatory overflow-y-scroll overflow-x-hidden h-screen"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.6 }}

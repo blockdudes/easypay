@@ -36,14 +36,29 @@ export const OnboardingPrivateCard = ({
 
   const sign = async () => {
     try {
-      if (provider && signer && umbra && stealthKeyRegistry) {
-        const { spendingKeyPair, viewingKeyPair } =
-          await umbra.generatePrivateKeys(signer);
-        setSpendingKey(spendingKeyPair.publicKeyHex);
-        setViewingKey(viewingKeyPair.publicKeyHex);
+      if (!provider) {
+        location.reload();
+      } else if (!signer) {
+        throw Error("signer not found")
+      } else if (!umbra) {
+        throw Error("umbra not found")
+      } else if (!stealthKeyRegistry) {
+        throw Error("stealthKeyRegistry not found")
+      } else {
+        console.log("yeh vala chl rha h")
+        try {
+          const { spendingKeyPair, viewingKeyPair } =
+            await umbra.generatePrivateKeys(signer);
+          setSpendingKey(spendingKeyPair.publicKeyHex);
+          setViewingKey(viewingKeyPair.publicKeyHex);
+        } catch (error) {
+          console.log(error)
+        }
       }
+
       toast.success("Signature successful");
     } catch (error: any) {
+      console.log("yeh bhi chl skta h")
       toast.error(error?.message ?? "Something went wrong");
       throw error;
     }

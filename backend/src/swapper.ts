@@ -62,5 +62,4 @@ const swap = async (assetTransfer: AssetTransferInterface) => {
   }
   const receipt = await tx.wait();
 };
-
 export { swap };

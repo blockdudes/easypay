@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { PublicTransactionHistory } from "../../types/types";
+import { transactionHistoryType } from "../../types/types";
 
 type initialPublicTransactionDataType = {
     loading: boolean;
-    publicTransactionHistory: PublicTransactionHistory[] | null;
+    publicTransactionHistory: transactionHistoryType[] | null;
     error: string | null;
 }
 const initialPublicTransactionData: initialPublicTransactionDataType = {
@@ -13,21 +13,40 @@ const initialPublicTransactionData: initialPublicTransactionDataType = {
     error: null
 }
 
+export type transactionHistoryTypes = {
+    sender: string | null;
+    chain: string | null;
+    date: string | null;
+    asset: string | null;
+    amount: string | null;
+    txnhash: string | null;
+    iswithdrawn: boolean;
+    randomnumber: string | null;
+    receiver: string | null;
+    token: string | null;
+    type: string | null;
+};
+
+
 export const fetchOnBoardingTxData = createAsyncThunk("fetchOnBoardingTxData", async ({ contract }: { contract: string }, { rejectWithValue }) => {
     try {
-        let publicTransactionHistory: PublicTransactionHistory[] = [];
+        let publicTransactionHistory: transactionHistoryType[] = [];
         const data = (await axios.get(`http://localhost:3000/get-transfer-info?address=${contract}`)).data || [];
         console.log(data);
 
         for (let i = 0; i < data.length; i++) {
-            const publicTransaction: PublicTransactionHistory = {
+            const publicTransaction: transactionHistoryType = {
                 sender: data[i]?.from,
                 chain: data[i]?.chain,
                 date: data[i]?.timestamp,
                 asset: data[i]?.dstToken,
                 amount: data[i]?.amount,
                 txnhash: data[i]?.transactionHash,
-                type: "public"
+                iswithdrawn: null,
+                randomnumber: null,
+                receiver: null,
+                token: null,
+                type: "public",
             }
             publicTransactionHistory.push(publicTransaction);
         }
@@ -48,7 +67,7 @@ const onBoardingTxData = createSlice({
         });
         builder.addCase(fetchOnBoardingTxData.fulfilled, (state, action) => {
             state.loading = false;
-            state.publicTransactionHistory = action.payload.publicTransactionHistory as PublicTransactionHistory[]
+            state.publicTransactionHistory = action.payload.publicTransactionHistory as transactionHistoryType[]
         });
         builder.addCase(fetchOnBoardingTxData.rejected, (state, action) => {
             state.loading = false;

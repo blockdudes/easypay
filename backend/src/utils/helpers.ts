@@ -19,6 +19,7 @@ const convertChainNameToNumber = (chainName: string) => {
       return "421614";
   }
 };
+
 const convertChainIdToChainFlipId = (chainId: string) => {
   switch (chainId) {
     case ChainIds.EthereumSepolia:

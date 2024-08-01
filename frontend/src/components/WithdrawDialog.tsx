@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { useState } from "react";
+
 import { Transaction } from "../types/types";
 
 import { transactionHistoryType } from "../types/types";
@@ -41,7 +42,7 @@ const WithdrawDialog = ({
       if (provider && signer && umbra && stealthKeyRegistry) {
         if (tx.type === "private") {
           const { spendingKeyPair } = await umbra.generatePrivateKeys(signer);
-          const stealthKeyPair = await spendingKeyPair.mulPrivateKey(tx.randomnumber);
+          const stealthKeyPair = await spendingKeyPair.mulPrivateKey(tx.randomnumber!);
           const stealthPrivateKey = stealthKeyPair.privateKeyHex;
           if (stealthPrivateKey) {
             console.log(stealthKeyPair.address);

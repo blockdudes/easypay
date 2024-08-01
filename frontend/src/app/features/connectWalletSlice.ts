@@ -24,22 +24,16 @@ type ConnectWalletReturnType = {
 export const connectWallet = createAsyncThunk<ConnectWalletReturnType, void, {}>("connectWallet", async (_, { rejectWithValue }) => {
     try {
         if (typeof (window as any).ethereum != "undefined") {
-            console.log("ConnectWallet: connected");
-            
             const web3Provider = new ethers.providers.Web3Provider((window as any).ethereum);
-            console.log(web3Provider);
-
-
             const signer = web3Provider.getSigner();
-            console.log(signer);
             const address = await signer.getAddress();
             const network = await web3Provider.getNetwork();
             const umbra = new Umbra(web3Provider, network.chainId);
             const stealthKeyRegistry = new StealthKeyRegistry(web3Provider);
-            console.log(web3Provider, signer, address, umbra, stealthKeyRegistry)
             return { provider: web3Provider, signer, address, umbra, stealthKeyRegistry };
         }
     } catch (error) {
+        console.log(error);
         return rejectWithValue(error);
     }
 });

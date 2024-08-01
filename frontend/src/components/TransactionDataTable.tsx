@@ -12,8 +12,8 @@ export const TransactionDataTable = ({
   isLoading,
 }: {
   headers: string[];
-  transactions: transactionHistoryType[] | PublicTransactionHistory[];
-  onWithdraw?: (transaction: transactionHistoryType) => void | undefined;
+  transactions: transactionHistoryType[];
+  onWithdraw?: ((transaction: transactionHistoryType) => void) | undefined;
   isLoading: boolean;
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
