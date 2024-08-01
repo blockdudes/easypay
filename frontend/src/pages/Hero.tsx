@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
-import {
-  useActiveAccount,
-  useActiveWalletConnectionStatus,
-} from "thirdweb/react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { connectWallet } from "../app/features/connectWalletSlice";
+import { useActiveAccount } from "thirdweb/react";
+import { useAppSelector } from "../app/hooks";
 import { Button, Spinner, Typography } from "@material-tailwind/react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 const Hero = () => {
-  const dispatch = useAppDispatch();
-  const connectionStatus = useActiveWalletConnectionStatus();
   const account = useActiveAccount();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,15 +17,6 @@ const Hero = () => {
   );
 
   console.log(publicOnBoardingData);
-
-  useEffect(() => {
-    if (connectionStatus === "connected") {
-      console.log("connected");
-      dispatch(connectWallet());
-    } else {
-      console.log("not connected");
-    }
-  }, [connectionStatus]);
 
   const launchApp = () => {
     if (!account) {

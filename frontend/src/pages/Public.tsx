@@ -2,20 +2,23 @@ import { PublicAssetsReceivedCard } from "../components/PublicAssetsReceivedCard
 import { PublicAddressCard } from "../components/PublicAddressCard";
 import { PrivateUrlCard } from "../components/PrivateUrlCard";
 import { TransactionDataTable } from "../components/TransactionDataTable";
-import { PublicTransactionHistory, transactionHistoryType } from "../types/types";
+import { transactionHistoryType } from "../types/types";
 import { Header } from "../components/Header";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { homePageTransitions } from "../transitions/transitions";
 import { useAppSelector } from "../app/hooks";
 
-
 // import { PageTransition } from "../components/PageTransition";
 
 const Public = () => {
-
-  const publicOnBoardingTxData = useAppSelector(state => state.publicOnBoardingTx);
-  console.log(publicOnBoardingTxData.publicTransactionHistory)
+  const publicOnBoardingTxData = useAppSelector(
+    (state) => state.publicOnBoardingTx
+  );
+  console.log(
+    "publicOnBoardingTxData.publicTransactionHistory",
+    publicOnBoardingTxData.publicTransactionHistory
+  );
 
   // publicOnBoardingTxData.
 
@@ -29,7 +32,8 @@ const Public = () => {
     "Txn Hash",
   ];
 
-  const dummyTransactions: PublicTransactionHistory[] = publicOnBoardingTxData.publicTransactionHistory as PublicTransactionHistory[] || []
+  const dummyTransactions: transactionHistoryType[] =
+    publicOnBoardingTxData.publicTransactionHistory || [];
   // const dummyTransactions: transactionHistoryType[] = [
   //   {
   //     sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
@@ -424,7 +428,7 @@ const Public = () => {
   // ];
   const [direction, setDirection] = useState<"left" | "right">("left");
   const [isLoading, setIsLoading] = useState(false);
-  const [transactions, setTransactions] = useState<PublicTransactionHistory[]>(
+  const [transactions, setTransactions] = useState<transactionHistoryType[]>(
     []
   );
 
@@ -460,6 +464,8 @@ const Public = () => {
                 headers={headers}
                 transactions={transactions}
                 isLoading={isLoading}
+                isPrivate={false}
+                scan={() => {}}
               />
             </div>
           </div>

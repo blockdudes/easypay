@@ -3,17 +3,19 @@ import WithdrawDialog from "./WithdrawDialog";
 import { useState } from "react";
 import { transactionHistoryType } from "../types/types";
 import { motion } from "framer-motion";
-import {PublicTransactionHistory} from "../types/types";
+import { LuRadar } from "react-icons/lu";
 
 export const TransactionDataTable = ({
   headers,
   transactions,
-  onWithdraw,
+  isPrivate,
   isLoading,
+  scan,
 }: {
   headers: string[];
   transactions: transactionHistoryType[];
-  onWithdraw?: ((transaction: transactionHistoryType) => void) | undefined;
+  isPrivate: boolean;
+  scan?: (() => void) | undefined;
   isLoading: boolean;
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -60,15 +62,32 @@ export const TransactionDataTable = ({
                 >
                   <div
                     className={`text-2xl text-bold ${
-                      onWithdraw ? "text-app-brown" : "text-app-blue"
+                      isPrivate ? "text-app-brown" : "text-app-blue"
                     } leading-none opacity-70`}
                   >
                     {head}
                   </div>
                 </th>
               ))}
-              {onWithdraw && (
-                <th className="p-4 text-center border-b-[1px] border-app-gray"></th>
+              {isPrivate && scan && (
+                <th className="p-4 text-center border-b-[1px] border-app-gray">
+                  <Button
+                    variant="outlined"
+                    color="brown"
+                    onClick={scan}
+                    className="w-full text-sm py-2 mx-0 flex items-center justify-center gap-2 font-medium normal-case transition-all duration-300 hover:scale-105 group"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    <LuRadar
+                      color="brown"
+                      size={20}
+                      className="group-hover:animate-spin"
+                    />
+                    Scan
+                  </Button>
+                </th>
               )}
             </tr>
           </thead>
@@ -108,8 +127,11 @@ export const TransactionDataTable = ({
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                       >
-                        {transaction.sender && transaction.sender.slice(0, onWithdraw ? 6 : 12)}...
-                        {transaction.sender && transaction.sender.slice(-(onWithdraw ? 6 : 12))}
+                        {transaction.sender &&
+                          transaction.sender.slice(0, isPrivate ? 6 : 12)}
+                        ...
+                        {transaction.sender &&
+                          transaction.sender.slice(-(isPrivate ? 6 : 12))}
                       </Typography>
                     </td>
                     <td className="p-4 text-center">
@@ -169,11 +191,14 @@ export const TransactionDataTable = ({
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                       >
-                        {transaction.txnhash && transaction.txnhash.slice(0, onWithdraw ? 8 : 16)}...
-                        {transaction.txnhash && transaction.txnhash.slice(-(onWithdraw ? 8 : 16))}
+                        {transaction.txnhash &&
+                          transaction.txnhash.slice(0, isPrivate ? 8 : 16)}
+                        ...
+                        {transaction.txnhash &&
+                          transaction.txnhash.slice(-(isPrivate ? 8 : 16))}
                       </Typography>
                     </td>
-                    {onWithdraw && (
+                    {isPrivate && (
                       <td className="p-4 text-center">
                         {(transaction as transactionHistoryType).iswithdrawn ? (
                           <Button
@@ -193,7 +218,11 @@ export const TransactionDataTable = ({
                             size="sm"
                             color="brown"
                             className="w-full text-sm py-2 mx-0 font-medium normal-case transition-all duration-300 hover:scale-105 hover:bg-brown-600"
-                            onClick={() => handleOpenDialog(transaction as transactionHistoryType)}
+                            onClick={() =>
+                              handleOpenDialog(
+                                transaction as transactionHistoryType
+                              )
+                            }
                             placeholder={undefined}
                             onPointerEnterCapture={undefined}
                             onPointerLeaveCapture={undefined}
@@ -207,7 +236,7 @@ export const TransactionDataTable = ({
                 );
               })
             )}
-            <div className="flex-1"/>
+            <div className="flex-1" />
           </tbody>
         </table>
       </Card>

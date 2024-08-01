@@ -1,9 +1,23 @@
-import { Card, Input } from "@material-tailwind/react";
+import { Card, Input, Option, Select } from "@material-tailwind/react";
 import { useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 
-export const MakeTransactionCard = ({ amount, token, setAmount, setToken }: { amount: string, token: string, setAmount: (e: string) => void, setToken: (e: string) => void }) => {
-  
+export const MakeTransactionCard = ({
+  amount,
+  token,
+  setAmount,
+  setToken,
+}: {
+  amount: string;
+  token: string;
+  setAmount: (e: string) => void;
+  setToken: (e: string) => void;
+}) => {
+  const tokens = {
+    ETH: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    USDC: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+    USDT: "0x7169D38820dfd117C3FA1f22a697dBA58d90BA06",
+  };
   const [errors, setErrors] = useState({ token: false, amount: false });
 
   const tokenControls = useAnimation();
@@ -120,8 +134,7 @@ export const MakeTransactionCard = ({ amount, token, setAmount, setToken }: { am
           >
             <div className="text-xl font-bold">Token</div>
             <motion.div className="w-full" animate={tokenControls}>
-              <Input
-                type="text"
+              <Select
                 value={token}
                 labelProps={{
                   className: "hidden",
@@ -129,12 +142,24 @@ export const MakeTransactionCard = ({ amount, token, setAmount, setToken }: { am
                 className={`!border-app-gray ${
                   errors.token ? "border-red-500" : ""
                 }`}
-                onChange={(e) => setToken(e.target.value)}
+                onChange={(token) => {
+                  console.log(token);
+                  return setToken(token || "");
+                }}
                 onBlur={() => validateInput("token")}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
-                crossOrigin={undefined}
-              />
+                placeholder={undefined}
+              >
+                {Object.keys(tokens).map((token, index) => (
+                  <Option
+                    key={index}
+                    value={tokens[token as keyof typeof tokens]}
+                  >
+                    {token}
+                  </Option>
+                ))}
+              </Select>
             </motion.div>
           </motion.div>
         </div>

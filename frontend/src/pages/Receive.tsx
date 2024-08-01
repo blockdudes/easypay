@@ -1,72 +1,98 @@
 import { MakeTransactionCard } from "../components/MakeTransactionCard";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { useState } from "react";
+import { useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { ethers } from "ethers";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
 
-import { useActiveWalletConnectionStatus } from "thirdweb/react";
-import { connectWallet } from "../app/features/connectWalletSlice";
+import { useActiveAccount } from "thirdweb/react";
 import { motion } from "framer-motion";
 import { NextStepButton } from "../components/NextStepButton";
+import { sepolia } from "thirdweb/chains";
+import { Umbra } from "@umbracash/umbra-js";
+import toast from "react-hot-toast";
+import { getContract, sendAndConfirmTransaction } from "thirdweb";
+import { prepareContractCall } from "thirdweb";
 
 const Receive = () => {
-  const [token, setToken] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+  const [token, setToken] = useState<string>(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+  );
+  const [amount, setAmount] = useState<string>("0");
   const { address } = useParams();
-  const { provider, signer, umbra, stealthKeyRegistry } = useAppSelector(
+  const { provider, signer, stealthKeyRegistry } = useAppSelector(
     (state: RootState) => state.connectWallet
   );
-  console.log(provider, signer, umbra, stealthKeyRegistry);
+  const { client } = useAppSelector((state) => state.thirdWeb);
+  const account = useActiveAccount();
 
   const wallet = useAppSelector((state) => state.connectWallet);
   console.log(wallet);
 
-  const dispatch = useAppDispatch();
-  const tokenObj = {
-    ETH: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
-    USDC: "0xb751EFd248Bf932A91d70f87abf031ceb1616F19",
-    USDT: "0xb751EFd248Bf932A91d70f87abf031ceb1616F19",
-    DAI: "0xb751EFd248Bf932A91d70f87abf031ceb1616F19",
-    BTC: "0xb751EFd248Bf932A91d70f87abf031ceb1616F19",
-  };
-
-  const connectionStatus = useActiveWalletConnectionStatus();
-  useEffect(() => {
-    console.log(connectionStatus);
-    if (connectionStatus === "connected") {
-      console.log("Recieve: connected");
-      dispatch(connectWallet());
-    } else {
-      console.log("not connected");
-      dispatch(connectWallet());
-    }
-  }, [connectionStatus]);
-
   const send = async () => {
     try {
-      if (
-        provider &&
-        signer &&
-        umbra &&
-        stealthKeyRegistry &&
-        amount &&
-        token &&
-        address
-      ) {
-        const parsedAmount = ethers.utils.parseUnits(amount, 18);
-        const result = await umbra.send(
-          signer,
-          tokenObj[token as keyof typeof tokenObj],
-          parsedAmount,
-          address
-        );
-        console.log(result);
+      if (!provider) {
+        throw Error("provider not found");
+      } else if (!signer) {
+        throw Error("signer not found");
+      } else if (!stealthKeyRegistry) {
+        throw Error("stealthKeyRegistry not found");
+      } else if (!amount) {
+        throw Error("amount not found");
+      } else if (!token) {
+        throw Error("token not found");
+      } else if (!address) {
+        throw Error("address not found");
       } else {
-        console.log("connect your wallet");
+        console.log("address", address);
+        const umbra = new Umbra(provider, sepolia.id);
+        let parsedAmount;
+        if (token === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
+          parsedAmount = ethers.utils.parseUnits(amount, 18);
+        } else {
+          parsedAmount = ethers.utils.parseUnits(amount, 6);
+          const tokenContract = await getContract({
+            address: token,
+            chain: sepolia,
+            client: client,
+          });
+
+          const tx = prepareContractCall({
+            contract: tokenContract,
+            method:
+              "function approve(address spender, uint256 value) external returns (bool)",
+            params: [
+              "0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
+              parsedAmount.toBigInt(),
+            ],
+            gas: BigInt(1000000),
+          });
+
+          if (!account) {
+            throw Error("account not found");
+          }
+
+          const result = await sendAndConfirmTransaction({
+            transaction: tx,
+            account: account,
+          });
+
+          if (result?.status === "success") {
+            toast.success("Allowance approved");
+          } else {
+            toast.error("Something went wrong");
+            throw Error("Allowance not approved");
+          }
+        }
+        const result = await umbra.send(signer, token, parsedAmount, address, {
+          gasLimit: 1000000,
+        });
+        console.log("result", result);
+        toast.success("Transaction sent");
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast.error(error.message.split(" (")[0]);
       console.log(error);
     }
   };
@@ -75,6 +101,7 @@ const Receive = () => {
 
   const handleMakeTransaction = () => {
     setIsLoading(true);
+    console.log("gwcaiugiuweadcgso");
     send().then(() => {
       setIsLoading(false);
     });

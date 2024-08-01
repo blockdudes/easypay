@@ -16,6 +16,12 @@ import { useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { ConnectWalletButton } from "./ConnectWalletButton";
 import toast from "react-hot-toast";
+import { Umbra } from "@umbracash/umbra-js";
+import { sepolia } from "thirdweb/chains";
+import {
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "thirdweb/react";
 
 export const OnboardingPrivateCard = ({
   isLastStep,
@@ -26,53 +32,59 @@ export const OnboardingPrivateCard = ({
 }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const activeChain = useActiveWalletChain();
+  const switchChain = useSwitchActiveWalletChain();
 
   const [spendingKey, setSpendingKey] = useState<string | null>(null);
   const [viewingKey, setViewingKey] = useState<string | null>(null);
 
-  const { provider, signer, umbra, stealthKeyRegistry } = useAppSelector(
+  const { provider, signer, stealthKeyRegistry } = useAppSelector(
     (state: RootState) => state.connectWallet
   );
 
   const sign = async () => {
     try {
       if (!provider) {
-        location.reload();
+        throw Error("provider not found");
       } else if (!signer) {
-        throw Error("signer not found")
-      } else if (!umbra) {
-        throw Error("umbra not found")
+        throw Error("signer not found");
       } else if (!stealthKeyRegistry) {
-        throw Error("stealthKeyRegistry not found")
+        throw Error("stealthKeyRegistry not found");
       } else {
-        console.log("yeh vala chl rha h")
-        try {
-          const { spendingKeyPair, viewingKeyPair } =
-            await umbra.generatePrivateKeys(signer);
-          setSpendingKey(spendingKeyPair.publicKeyHex);
-          setViewingKey(viewingKeyPair.publicKeyHex);
-        } catch (error) {
-          console.log(error)
+        if (!activeChain) {
+          throw Error("Wallet not connected");
+        } else if (activeChain?.id !== sepolia.id) {
+          setTimeout(async () => {
+            await switchChain(sepolia);
+          }, 1500);
+          throw Error("Please change chain to Sepolia");
         }
+        const umbra = new Umbra(provider, sepolia.id);
+        const { spendingKeyPair, viewingKeyPair } =
+          await umbra.generatePrivateKeys(signer);
+        setSpendingKey(spendingKeyPair.publicKeyHex);
+        setViewingKey(viewingKeyPair.publicKeyHex);
       }
 
       toast.success("Signature successful");
     } catch (error: any) {
-      console.log("yeh bhi chl skta h")
       toast.error(error?.message ?? "Something went wrong");
       throw error;
     }
   };
 
   const sendTransaction = async () => {
-    if (
-      provider &&
-      signer &&
-      umbra &&
-      stealthKeyRegistry &&
-      spendingKey &&
-      viewingKey
-    ) {
+    if (!provider) {
+      throw Error("provider not found");
+    } else if (!signer) {
+      throw Error("signer not found");
+    } else if (!stealthKeyRegistry) {
+      throw Error("stealthKeyRegistry not found");
+    } else if (!spendingKey) {
+      throw Error("spendingKey not found");
+    } else if (!viewingKey) {
+      throw Error("viewingKey not found");
+    } else {
       try {
         await stealthKeyRegistry.setStealthKeys(
           spendingKey,
@@ -231,7 +243,7 @@ export const OnboardingPrivateCard = ({
               className="w-48"
               size="lg"
               onClick={handleNext}
-              disabled={isLastStep}
+              disabled={isLastStep || isLoading}
               placeholder={undefined}
               onPointerEnterCapture={undefined}
               onPointerLeaveCapture={undefined}

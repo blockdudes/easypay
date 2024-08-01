@@ -1,17 +1,17 @@
 import { PublicAddressCard } from "../components/PublicAddressCard";
 import { PrivateUrlCard } from "../components/PrivateUrlCard";
 import { TransactionDataTable } from "../components/TransactionDataTable";
-import { Transaction } from "../types/types";
 import { PrivateAssetsReceivedCard } from "../components/PrivateAssetsReceivedCard";
 import { useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { ethers } from "ethers";
 import { transactionHistoryType } from "../types/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import { motion } from "framer-motion";
 import { homePageTransitions } from "../transitions/transitions";
-import { Button } from "@material-tailwind/react";
+import { sepolia } from "thirdweb/chains";
+import { Umbra } from "@umbracash/umbra-js";
 
 const Private = () => {
   const headers = [
@@ -22,18 +22,38 @@ const Private = () => {
     "Asset",
     "Amount",
     "Txn Hash",
-    "",
   ];
-  const { provider, signer, umbra, stealthKeyRegistry } = useAppSelector(
+  const { provider, signer, stealthKeyRegistry } = useAppSelector(
     (state: RootState) => state.connectWallet
   );
   const [direction, setDirection] = useState<string>("right");
   const [isLoading, setIsLoading] = useState(false);
+  const [transactions, setTransactions] = useState<transactionHistoryType[]>(
+    JSON.parse(localStorage.getItem("scanPrivateData") || "[]")
+  );
+
+  useEffect(() => {
+    window.addEventListener("storage", () => {
+      setTransactions(
+        JSON.parse(localStorage.getItem("scanPrivateData") || "[]")
+      );
+    });
+    return () => {
+      window.removeEventListener("storage", () => {});
+    };
+  }, []);
 
   const scan = async () => {
     setIsLoading(true);
     try {
-      if (provider && signer && umbra && stealthKeyRegistry) {
+      if (!provider) {
+        throw Error("provider not found");
+      } else if (!signer) {
+        throw Error("signer not found");
+      } else if (!stealthKeyRegistry) {
+        throw Error("stealthKeyRegistry not found");
+      } else {
+        const umbra = new Umbra(provider, sepolia.id);
         const { spendingKeyPair, viewingKeyPair } =
           await umbra.generatePrivateKeys(signer);
         const spendingPublicKey = spendingKeyPair.publicKeyHex;
@@ -63,7 +83,7 @@ const Private = () => {
                 date: date,
                 asset:
                   tx.token === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
-                    ? "ETH"
+                    ? "NATIVE"
                     : "TOKEN",
                 amount: ethers.utils.formatUnits(tx.amount.toBigInt(), 18),
                 txnhash: tx.txHash,
@@ -79,22 +99,13 @@ const Private = () => {
             "scanPrivateData",
             JSON.stringify(existingObjects)
           );
+          window.dispatchEvent(new Event("storage"));
         }
-      } else {
-        console.log("connect wallet");
       }
     } catch (error) {
       console.log(error);
     }
     setIsLoading(false);
-  };
-
-  // useEffect(() => {
-  //   scan();
-  // }, [provider, signer, umbra, stealthKeyRegistry]);
-
-  const handleWithdraw = (transaction: transactionHistoryType) => {
-    console.log("Withdraw", transaction);
   };
 
   return (
@@ -116,25 +127,12 @@ const Private = () => {
               <PublicAddressCard />
               <PrivateUrlCard />
             </div>
-            <div className="col-span-2 relative">
-              <div className="absolute top-6 right-6 z-10">
-                <Button
-                  variant="outlined"
-                  color="brown"
-                  onClick={scan}
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                >
-                  Scan
-                </Button>
-              </div>
+            <div className="col-span-2">
               <TransactionDataTable
                 headers={headers}
-                transactions={JSON.parse(
-                  localStorage.getItem("scanPrivateData") || "[]"
-                )}
-                onWithdraw={handleWithdraw}
+                transactions={transactions}
+                isPrivate={true}
+                scan={scan}
                 isLoading={isLoading}
               />
             </div>

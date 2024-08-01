@@ -25,14 +25,16 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait" initial={true}>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Hero />} />
-        <Route path="/public" element={<Public />} />
-        <Route path="/private" element={<Private />} />
-        <Route path="/onboarding">
-          <Route path="/onboarding/public" element={<OnboardingPublic />} />
-          <Route path="/onboarding/private" element={<OnboardingPrivate />} />
+        <Route path="/">
+          <Route index element={<Hero />} />
+          <Route path="/public" element={<Public />} />
+          <Route path="/private" element={<Private />} />
+          <Route path="/onboarding">
+            <Route path="/onboarding/public" element={<OnboardingPublic />} />
+            <Route path="/onboarding/private" element={<OnboardingPrivate />} />
+          </Route>
+          <Route path="/private/receive/:address" element={<Receive />} />
         </Route>
-        <Route path="/private/receive/:address" element={<Receive />} />
       </Routes>
     </AnimatePresence>
   );
@@ -42,7 +44,9 @@ function App() {
   const dispatch = useAppDispatch();
   const connectionStatus = useActiveWalletConnectionStatus();
   const account = useActiveAccount();
-  const publicOnBoardingData = useAppSelector(state => state.publicOnBoarding);
+  const publicOnBoardingData = useAppSelector(
+    (state) => state.publicOnBoarding
+  );
 
   useEffect(() => {
     if (connectionStatus === "connected") {
@@ -51,11 +55,16 @@ function App() {
         dispatch(fetchOnBoardingData({ signer: account?.address }));
         if (!publicOnBoardingData.error && publicOnBoardingData.address) {
           console.log(publicOnBoardingData.address);
-          dispatch(fetchOnBoardingTxData({ contract: publicOnBoardingData.address }))
+          dispatch(
+            fetchOnBoardingTxData({ contract: publicOnBoardingData.address })
+          );
         }
       }
     } else {
-      console.log("not connected");
+      console.log("wallet not connected");
+      if (window.location.pathname !== "/") {
+        window.location.href = "/";
+      }
     }
   }, [connectionStatus]);
 
