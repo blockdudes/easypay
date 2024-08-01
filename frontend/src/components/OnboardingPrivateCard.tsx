@@ -56,6 +56,7 @@ export const OnboardingPrivateCard = ({
         } else if (activeChain?.id !== sepolia.id) {
           setTimeout(async () => {
             await switchChain(sepolia);
+            location.reload();
           }, 1500);
           throw Error("Please change chain to Sepolia");
         }
