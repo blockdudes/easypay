@@ -78,10 +78,11 @@ app.get("/get-transfer-info", async (req, res) => {
 
     const newAddr = address;
     console.log("0xbd19D0F6628ec353D12B642454AD131EcfA2Bb81" === address, address);
-    const transferInfo = (await AssetTransfer.find()).filter(tx => {
-      console.log(JSON.parse(tx._doc))
-      return tx._doc.to === address;
-    });
+    const transferInfo = await AssetTransfer.find({ to: address.toString().toLowerCase() });
+
+    // for (let i = 0; i > transferInfo.length; i++) {
+    //   console.log(transferInfo[i].to);
+    // }
 
     console.log(transferInfo);
     if (!transferInfo) {
