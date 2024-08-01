@@ -48,26 +48,39 @@ function App() {
     (state) => state.publicOnBoarding
   );
 
-  const onboardingTxDataInitilizer = () => {
+  const onboardingDataInitilizer = () => {
     if (account?.address) {
       dispatch(fetchOnBoardingData({ signer: account?.address }));
-      if (!publicOnBoardingData.error && publicOnBoardingData.address) {
-        console.log(publicOnBoardingData.address);
-        dispatch(
-          fetchOnBoardingTxData({ contract: publicOnBoardingData.address })
-        );
-      }
     }
   };
 
   useEffect(() => {
+    if (!publicOnBoardingData.error && publicOnBoardingData.address) {
+      console.log(publicOnBoardingData.address);
+      dispatch(
+        fetchOnBoardingTxData({ contract: publicOnBoardingData.address })
+      );
+    }
+  }, [publicOnBoardingData]);
+
+  useEffect(() => {
+    console.log("connectionSta8yf7f7f7ftus", publicOnBoardingData);
     if (connectionStatus === "connected") {
       dispatch(connectWallet());
-      onboardingTxDataInitilizer();
+      onboardingDataInitilizer();
     } else {
       console.log("wallet not connected");
     }
   }, [connectionStatus]);
+
+  // useEffect(() => {
+  //   if (!publicOnBoardingData.error && publicOnBoardingData.address) {
+  //     console.log(publicOnBoardingData.address);
+  //     dispatch(
+  //       fetchOnBoardingTxData({ contract: publicOnBoardingData.address })
+  //     );
+  //   }
+  // }, [publicOnBoardingData]);
 
   return (
     <div className="w-screen h-screen">

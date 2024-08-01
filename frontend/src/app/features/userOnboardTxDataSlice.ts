@@ -38,14 +38,16 @@ export const fetchOnBoardingTxData = createAsyncThunk(
             `https://nocturnis.serveo.net/get-transfer-info?address=${contract}`
           )
         ).data || [];
-      console.log(data);
 
       for (let i = 0; i < data.length; i++) {
         const publicTransaction: transactionHistoryType = {
           sender: data[i]?.from,
           chain: data[i]?.chain,
           date: data[i]?.timestamp,
-          asset: data[i]?.dstToken,
+          asset:
+            data[i]?.dstToken === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+              ? "NATIVE"
+              : "TOKEN",
           amount: data[i]?.amount,
           txnhash: data[i]?.transactionHash,
           iswithdrawn: null,
