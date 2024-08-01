@@ -93,25 +93,12 @@ export const TransactionDataTable = ({
           </thead>
           <tbody>
             {isLoading ? (
-              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
+              <div className="absolute top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center">
                 <Spinner
                   className="w-10 h-10 animate-spin"
                   onPointerEnterCapture={undefined}
                   onPointerLeaveCapture={undefined}
                 />
-              </div>
-            ) : transactions.length == 0 ? (
-              <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
-                <Typography
-                  variant="lead"
-                  color="gray"
-                  className="font-normal"
-                  placeholder={undefined}
-                  onPointerEnterCapture={undefined}
-                  onPointerLeaveCapture={undefined}
-                >
-                  No transactions found
-                </Typography>
               </div>
             ) : (
               transactions.map((transaction, index) => {
