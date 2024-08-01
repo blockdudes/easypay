@@ -75,7 +75,15 @@ app.get("/get-transfer-info", async (req, res) => {
     return res.status(400).send("Owner is required");
   }
   try {
-    const transferInfo = await AssetTransfer.find({ to: address });
+
+    const newAddr = address;
+    console.log("0xbd19D0F6628ec353D12B642454AD131EcfA2Bb81" === address, address);
+    const transferInfo = (await AssetTransfer.find()).filter(tx => {
+      console.log(JSON.parse(tx._doc))
+      return tx._doc.to === address;
+    });
+
+    console.log(transferInfo);
     if (!transferInfo) {
       return res.status(404).send("Unable to get transfer info");
     }
@@ -172,13 +180,14 @@ app.post("/asset-receiver-activity", async (req, res) => {
         dstToken: assetReceiver.token,
         timestamp: new Date().toISOString(),
         native: activity.category == "external",
+        network: "testnet"
       };
       console.log(assetTransferInfo);
 
       const assetTransfer = new AssetTransfer(assetTransferInfo);
       await assetTransfer.save();
 
-      await swap(assetTransfer);
+      await swap(assetTransferInfo);
     }
   }
   res.status(200).send("Received!");
