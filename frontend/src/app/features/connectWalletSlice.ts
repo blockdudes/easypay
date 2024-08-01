@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import toast from "react-hot-toast";
 
 const initialState: ConnectWalletInterface = {
+  testnet: true,
   provider: null,
   signer: null,
   address: null,
@@ -51,7 +52,14 @@ export const connectWallet = createAsyncThunk<
 const connectWalletSlice = createSlice({
   name: "connectWallet",
   initialState,
-  reducers: {},
+  reducers: {
+    setTestnet: (state) => {
+      state.testnet = true;
+    },
+    setMainnet: (state) => {
+      state.testnet = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(connectWallet.pending, (state) => {
       state.loading = true;
@@ -73,6 +81,7 @@ const connectWalletSlice = createSlice({
   },
 });
 
+export const { setTestnet, setMainnet } = connectWalletSlice.actions;
 export default connectWalletSlice.reducer;
 
 // const sepoliaChainParams = {

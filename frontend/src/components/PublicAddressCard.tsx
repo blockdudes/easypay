@@ -9,14 +9,14 @@ export const PublicAddressCard = () => {
 
   const handleCopy = () => {
     setCopied(true);
+    navigator.clipboard.writeText(publicOnBoarding?.address || "");
     setTimeout(() => {
       setCopied(false);
     }, 2000);
   };
 
-  const publicOnBoarding = useAppSelector(state => state.publicOnBoarding);
-  console.log(publicOnBoarding);
-  
+  const publicOnBoarding = useAppSelector((state) => state.publicOnBoarding);
+
   return (
     <Card
       className="w-full h-full flex flex-col justify-between shadow-2xl border-[1px] border-app-gray p-5"

@@ -1,7 +1,7 @@
 import { MakeTransactionCard } from "../components/MakeTransactionCard";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { RootState } from "../app/store";
 import { ethers } from "ethers";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
@@ -14,6 +14,15 @@ import { Umbra } from "@umbracash/umbra-js";
 import toast from "react-hot-toast";
 import { getContract, sendAndConfirmTransaction } from "thirdweb";
 import { prepareContractCall } from "thirdweb";
+import {
+  Menu,
+  MenuHandler,
+  Button,
+  MenuList,
+  MenuItem,
+} from "@material-tailwind/react";
+import { FaChevronDown } from "react-icons/fa";
+import { setMainnet, setTestnet } from "../app/features/connectWalletSlice";
 
 const Receive = () => {
   const [token, setToken] = useState<string>(
@@ -26,6 +35,9 @@ const Receive = () => {
   );
   const { client } = useAppSelector((state) => state.thirdWeb);
   const account = useActiveAccount();
+  const isTestnet = useAppSelector((state) => state.connectWallet.testnet);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
   const wallet = useAppSelector((state) => state.connectWallet);
   console.log(wallet);
@@ -109,9 +121,62 @@ const Receive = () => {
 
   return (
     <div className="h-full w-full flex flex-col justify-evenly items-center">
-      <div className="w-full flex justify-end items-center px-10">
+      <div className="w-full flex justify-between items-center px-10">
+        <Menu
+          allowHover
+          open={isMenuOpen}
+          handler={() => setIsMenuOpen((prev) => !prev)}
+        >
+          <MenuHandler>
+            <Button
+              className="h-[60px] w-[180px] flex justify-center items-center gap-2 border-[0.1px] border-gray-400"
+              variant="outlined"
+              size="sm"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              <img
+                src={isTestnet ? "/testnet-icon.svg" : "/mainnet-icon.svg"}
+                alt={isTestnet ? "testnet-icon" : "mainnet-icon"}
+                className="w-6 h-6"
+              />
+              <div className="text-lg font-normal">
+                {isTestnet ? "Testnet" : "Mainnet"}
+              </div>
+              <FaChevronDown size={15} />
+            </Button>
+          </MenuHandler>
+          <MenuList
+            placeholder={undefined}
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
+          >
+            <MenuItem
+              onClick={() => {
+                dispatch(setMainnet());
+              }}
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              Mainnet
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                dispatch(setTestnet());
+              }}
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              Testnet
+            </MenuItem>
+          </MenuList>
+        </Menu>
         <ConnectWalletButton />
       </div>
+
       <div className="h-20" />
       <motion.div
         initial={{ y: 100, opacity: 0 }}

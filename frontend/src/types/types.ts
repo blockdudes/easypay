@@ -32,6 +32,7 @@ export type ThirdwebState = {
 };
 
 export type ConnectWalletInterface = {
+  testnet: boolean;
   provider: ethers.providers.Web3Provider | null;
   signer: ethers.providers.JsonRpcSigner | null;
   address: string | null;

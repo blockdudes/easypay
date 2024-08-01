@@ -34,7 +34,6 @@ const Public = () => {
 
   const dummyTransactions: transactionHistoryType[] =
     publicOnBoardingTxData.publicTransactionHistory || [];
-  // const dummyTransactions: transactionHistoryType[] = [
   //   {
   //     sender: "0x8923hdibf8cwi392dbq9h2ewc892349d23e8w9",
   //     chain: "Ethereum",
@@ -465,7 +464,6 @@ const Public = () => {
                 transactions={transactions}
                 isLoading={isLoading}
                 isPrivate={false}
-                scan={() => {}}
               />
             </div>
           </div>

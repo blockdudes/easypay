@@ -33,8 +33,8 @@ function AnimatedRoutes() {
             <Route path="/onboarding/public" element={<OnboardingPublic />} />
             <Route path="/onboarding/private" element={<OnboardingPrivate />} />
           </Route>
-          <Route path="/private/receive/:address" element={<Receive />} />
         </Route>
+        <Route path="/private/receive/:address" element={<Receive />} />
       </Routes>
     </AnimatePresence>
   );
@@ -48,23 +48,24 @@ function App() {
     (state) => state.publicOnBoarding
   );
 
+  const onboardingTxDataInitilizer = () => {
+    if (account?.address) {
+      dispatch(fetchOnBoardingData({ signer: account?.address }));
+      if (!publicOnBoardingData.error && publicOnBoardingData.address) {
+        console.log(publicOnBoardingData.address);
+        dispatch(
+          fetchOnBoardingTxData({ contract: publicOnBoardingData.address })
+        );
+      }
+    }
+  };
+
   useEffect(() => {
     if (connectionStatus === "connected") {
       dispatch(connectWallet());
-      if (account?.address) {
-        dispatch(fetchOnBoardingData({ signer: account?.address }));
-        if (!publicOnBoardingData.error && publicOnBoardingData.address) {
-          console.log(publicOnBoardingData.address);
-          dispatch(
-            fetchOnBoardingTxData({ contract: publicOnBoardingData.address })
-          );
-        }
-      }
+      onboardingTxDataInitilizer();
     } else {
       console.log("wallet not connected");
-      if (window.location.pathname !== "/") {
-        window.location.href = "/";
-      }
     }
   }, [connectionStatus]);
 

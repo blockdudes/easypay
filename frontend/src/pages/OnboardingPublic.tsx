@@ -48,6 +48,7 @@ const OnboardingPublic = () => {
       const assetReceiverFactoryContractAddress = chainIdToAddressMap.get(
         chain.id
       );
+      console.log(assetReceiverFactoryContractAddress);
       if (!assetReceiverFactoryContractAddress) {
         throw Error("Something went wrong");
       }
@@ -68,7 +69,7 @@ const OnboardingPublic = () => {
       // }
       let salt = ethers.utils.hexZeroPad(
         ethers.utils.keccak256(
-          ethers.utils.toUtf8Bytes(account?.address.concat("9897"))
+          ethers.utils.toUtf8Bytes(account?.address.concat("9897008"))
         ),
         32
       );
@@ -81,7 +82,7 @@ const OnboardingPublic = () => {
         method:
           "function deploy(bytes32 _salt, address token, uint256 chainId) public returns (address)",
         params: [`0x${salt}`, token, BigInt(chain.id)],
-        gas: BigInt(1000000),
+        gas: BigInt(10000000),
       });
 
       console.log(tx);
@@ -92,10 +93,12 @@ const OnboardingPublic = () => {
           transaction: tx,
           account: account,
         }));
+      console.log(result);
       if (result.status === "success") {
         toast.success("Public profile setup successful");
       } else {
         toast.error("Something went wrong");
+        throw Error("Something went wrong");
       }
     } catch (error: any) {
       console.error(error);
